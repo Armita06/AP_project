@@ -7,6 +7,7 @@ import repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -71,5 +72,50 @@ public class AdvertisementService {
                 System.err.println("خطا در حذف تصویر آگهی: " + e.getMessage());
             }
         }
+    }
+
+    @Transactional
+    public Advertisement updateAdvertisement(Long adId, Advertisement updatedAd, MultipartFile newFile, String username) {
+        Advertisement existingAd = advertisementRepository.findById(adId)
+                .orElseThrow(() -> new RuntimeException("آگهی مورد نظر یافت نشد!"));
+
+        if (!existingAd.getSeller().getUsername().equals(username)) {
+            throw new RuntimeException("خطای امنیتی: شما اجازه ویرایش آگهی دیگران را ندارید!");
+        }
+
+        if (updatedAd.getTitle() != null) {
+            existingAd.setTitle(updatedAd.getTitle());
+        }
+        if (updatedAd.getDescription() != null) {
+            existingAd.setDescription(updatedAd.getDescription());
+        }
+        if (updatedAd.getPrice() != null) {
+            existingAd.setPrice(updatedAd.getPrice());
+        }
+        if (updatedAd.getCategory() != null) {
+            existingAd.setCategory(updatedAd.getCategory());
+        }
+
+        if (newFile != null && !newFile.isEmpty()) {
+            String oldImage = existingAd.getImageUrl();
+
+            String newImageFilename = fileStorageService.storeFile(newFile);
+            existingAd.setImageUrl(newImageFilename);
+
+            if (StringUtils.hasText(oldImage)) {
+                try {
+                    fileStorageService.deleteFile(oldImage);
+                } catch (Exception e) {
+                    System.err.println("خطا در حذف عکس قبلی آگهی: " + e.getMessage());
+                }
+            }
+        }
+
+        return advertisementRepository.save(existingAd);
+    }
+    public List<Advertisement> getUserAdvertisements(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("کاربر یافت نشد!"));
+        return advertisementRepository.findBySellerId(user.getId());
     }
 }

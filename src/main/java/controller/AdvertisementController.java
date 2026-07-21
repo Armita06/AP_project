@@ -73,6 +73,33 @@ public class AdvertisementController {
         return ResponseEntity.ok(advertisementService.searchAds(keyword));
     }
 
+    @PutMapping(value = "/update/{id}", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> updateAd(
+            @PathVariable Long id,
+            @RequestParam("data") String adData,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            @RequestHeader(value = "Authorization", required = false) String header) {
+        try {
+            if (header == null || !header.startsWith("Bearer ")) {
+                return ResponseEntity.status(401).body(Map.of("error", "مشکل در احراز هویت توکن!"));
+            }
+
+            String token = header.substring(7);
+            if (!JwtUtil.isTokenValid(token)) {
+                return ResponseEntity.status(401).body(Map.of("error", "توکن منقضی یا نامعتبر است!"));
+            }
+
+            String username = JwtUtil.extractUsername(token);
+            Advertisement updatedAdData = objectMapper.readValue(adData, Advertisement.class);
+
+            Advertisement updatedAd = advertisementService.updateAdvertisement(id, updatedAdData, image, username);
+            return ResponseEntity.ok(updatedAd);
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteAd(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String header) {
         try {
@@ -91,6 +118,27 @@ public class AdvertisementController {
             return ResponseEntity.ok(Map.of("message", "آگهی با موفقیت حذف شد."));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+    @GetMapping("/my-ads")
+    public org.springframework.http.ResponseEntity<?> getMyAds(@RequestHeader(value = "Authorization", required = false) String header) {
+        try {
+            if (header == null || !header.startsWith("Bearer ")) {
+                return org.springframework.http.ResponseEntity.status(401).body(java.util.Map.of("error", "مشکل در احراز هویت توکن!"));
+            }
+
+            String token = header.substring(7);
+            if (!security.JwtUtil.isTokenValid(token)) {
+                return org.springframework.http.ResponseEntity.status(401).body(java.util.Map.of("error", "توکن منقضی یا نامعتبر است!"));
+            }
+
+            String username = security.JwtUtil.extractUsername(token);
+            List<Advertisement> myAds = advertisementService.getUserAdvertisements(username);
+
+            return org.springframework.http.ResponseEntity.ok(myAds);
+
+        } catch (Exception e) {
+            return org.springframework.http.ResponseEntity.badRequest().body(java.util.Map.of("error", e.getMessage()));
         }
     }
 }
