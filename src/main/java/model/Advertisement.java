@@ -20,6 +20,7 @@ public class Advertisement {
     private Double price;
     private String category;
     private String status;
+    private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -41,6 +42,8 @@ public class Advertisement {
     public void setCategory(String category) { this.category = category; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public User getSeller() { return seller; }
     public void setSeller(User seller) { this.seller = seller; }
     public LocalDateTime getCreatedAt() { return createdAt; }

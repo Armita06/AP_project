@@ -1,11 +1,15 @@
 package controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Advertisement;
 import service.AdvertisementService;
+import service.FileStorageService;
 import security.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -13,29 +17,44 @@ import java.util.List;
 public class AdvertisementController {
 
     private final AdvertisementService advertisementService;
+    private final FileStorageService fileStorageService;
+    private final ObjectMapper objectMapper;
 
-    public AdvertisementController(AdvertisementService advertisementService) {
+    public AdvertisementController(AdvertisementService advertisementService, FileStorageService fileStorageService, ObjectMapper objectMapper) {
         this.advertisementService = advertisementService;
+        this.fileStorageService = fileStorageService;
+        this.objectMapper = objectMapper;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createAd(@RequestBody Advertisement ad, @RequestHeader(value = "Authorization", required = false) String header) {
+    @PostMapping(value = "/create", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> createAd(
+            @RequestParam("data") String adData,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            @RequestHeader(value = "Authorization", required = false) String header) {
         try {
             if (header == null || !header.startsWith("Bearer ")) {
-                return ResponseEntity.status(401).body("مشکل در احراز هویت توکن!");
+                return ResponseEntity.status(401).body(Map.of("error", "مشکل در احراز هویت توکن!"));
             }
 
             String token = header.substring(7);
             if (!JwtUtil.isTokenValid(token)) {
-                return ResponseEntity.status(401).body("توکن منقضی یا نامعتبر است!");
+                return ResponseEntity.status(401).body(Map.of("error", "توکن منقضی یا نامعتبر است!"));
             }
 
             String username = JwtUtil.extractUsername(token);
-            Advertisement newAd = advertisementService.createAdvertisement(ad, username);
 
+            Advertisement ad = objectMapper.readValue(adData, Advertisement.class);
+
+            if (image != null && !image.isEmpty()) {
+                String imageName = fileStorageService.storeFile(image);
+                ad.setImageUrl(imageName);
+            }
+
+            Advertisement newAd = advertisementService.createAdvertisement(ad, username);
             return ResponseEntity.ok(newAd);
+
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -58,20 +77,20 @@ public class AdvertisementController {
     public ResponseEntity<?> deleteAd(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String header) {
         try {
             if (header == null || !header.startsWith("Bearer ")) {
-                return ResponseEntity.status(401).body("مشکل در احراز هویت توکن!");
+                return ResponseEntity.status(401).body(Map.of("error", "مشکل در احراز هویت توکن!"));
             }
 
             String token = header.substring(7);
             if (!JwtUtil.isTokenValid(token)) {
-                return ResponseEntity.status(401).body("توکن منقضی یا نامعتبر است!");
+                return ResponseEntity.status(401).body(Map.of("error", "توکن منقضی یا نامعتبر است!"));
             }
 
             String username = JwtUtil.extractUsername(token);
             advertisementService.deleteAdvertisement(id, username);
 
-            return ResponseEntity.ok("آگهی با موفقیت حذف شد.");
+            return ResponseEntity.ok(Map.of("message", "آگهی با موفقیت حذف شد."));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 }

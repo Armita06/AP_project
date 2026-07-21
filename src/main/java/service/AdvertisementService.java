@@ -5,6 +5,8 @@ import model.User;
 import repository.AdvertisementRepository;
 import repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,12 +15,15 @@ public class AdvertisementService {
 
     private final AdvertisementRepository advertisementRepository;
     private final UserRepository userRepository;
+    private final FileStorageService fileStorageService;
 
-    public AdvertisementService(AdvertisementRepository advertisementRepository, UserRepository userRepository) {
+    public AdvertisementService(AdvertisementRepository advertisementRepository, UserRepository userRepository, FileStorageService fileStorageService) {
         this.advertisementRepository = advertisementRepository;
         this.userRepository = userRepository;
+        this.fileStorageService = fileStorageService;
     }
 
+    @Transactional
     public Advertisement createAdvertisement(Advertisement ad, String username) {
         User realSeller = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("کاربر یافت نشد!"));
@@ -46,6 +51,7 @@ public class AdvertisementService {
         return advertisementRepository.findByTitleContaining(keyword);
     }
 
+    @Transactional
     public void deleteAdvertisement(Long adId, String username) {
         Advertisement ad = advertisementRepository.findById(adId)
                 .orElseThrow(() -> new RuntimeException("آگهی مورد نظر یافت نشد!"));
@@ -54,6 +60,16 @@ public class AdvertisementService {
             throw new RuntimeException("خطای امنیتی: شما اجازه حذف آگهی دیگران را ندارید!");
         }
 
+        String imageUrl = ad.getImageUrl();
+
         advertisementRepository.delete(ad);
+
+        if (StringUtils.hasText(imageUrl)) {
+            try {
+                fileStorageService.deleteFile(imageUrl);
+            } catch (Exception e) {
+                System.err.println("خطا در حذف تصویر آگهی: " + e.getMessage());
+            }
+        }
     }
 }
