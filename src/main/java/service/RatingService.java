@@ -4,6 +4,7 @@ import model.Advertisement;
 import model.Rating;
 import model.User;
 import repository.AdvertisementRepository;
+import repository.ConversationRepository;
 import repository.RatingRepository;
 import repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -19,16 +20,20 @@ public class RatingService {
     private final RatingRepository ratingRepository;
     private final UserRepository userRepository;
     private final AdvertisementRepository advertisementRepository;
+    private final ConversationRepository conversationRepository;
 
-    public RatingService(RatingRepository ratingRepository, UserRepository userRepository, AdvertisementRepository advertisementRepository) {
+    public RatingService(RatingRepository ratingRepository,
+                         UserRepository userRepository,
+                         AdvertisementRepository advertisementRepository,
+                         ConversationRepository conversationRepository) {
         this.ratingRepository = ratingRepository;
         this.userRepository = userRepository;
         this.advertisementRepository = advertisementRepository;
+        this.conversationRepository = conversationRepository;
     }
 
     @Transactional
     public Rating addRating(Long adId, Integer score, String comment, String username) {
-
         if (score == null || score < 1 || score > 5) {
             throw new IllegalArgumentException("امتیاز باید عددی بین ۱ تا ۵ باشد.");
         }
@@ -41,6 +46,11 @@ public class RatingService {
 
         if (ad.getSeller().getId().equals(buyer.getId())) {
             throw new IllegalStateException("شما نمی‌توانید به آگهی خودتان امتیاز دهید!");
+        }
+
+        boolean hasConversed = conversationRepository.findByBuyerAndAdvertisement(buyer, ad).isPresent();
+        if (!hasConversed) {
+            throw new IllegalStateException("شما تنها در صورتی می‌توانید امتیاز دهید که درباره این آگهی با فروشنده چت کرده باشید!");
         }
 
         if (ratingRepository.existsByBuyerAndAdvertisement(buyer, ad)) {
