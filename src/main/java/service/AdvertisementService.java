@@ -6,116 +6,83 @@ import repository.AdvertisementRepository;
 import repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-import java.time.LocalDateTime;
-import java.util.List;
+
+import java.util.NoSuchElementException;
 
 @Service
 public class AdvertisementService {
 
     private final AdvertisementRepository advertisementRepository;
     private final UserRepository userRepository;
-    private final FileStorageService fileStorageService;
 
-    public AdvertisementService(AdvertisementRepository advertisementRepository, UserRepository userRepository, FileStorageService fileStorageService) {
+    public AdvertisementService(AdvertisementRepository advertisementRepository, UserRepository userRepository) {
         this.advertisementRepository = advertisementRepository;
         this.userRepository = userRepository;
-        this.fileStorageService = fileStorageService;
     }
 
     @Transactional
-    public Advertisement createAdvertisement(Advertisement ad, String username) {
-        User realSeller = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("کاربر یافت نشد!"));
-
-        if (advertisementRepository.existsByTitleAndSeller(ad.getTitle(), realSeller)) {
-            throw new RuntimeException("شما قبلاً آگهی با این عنوان ثبت کرده‌اید!");
+    public Advertisement createAdvertisement(Advertisement adRequest, String username) {
+        if (adRequest.getTitle() == null || adRequest.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("عنوان آگهی نمی‌تواند خالی باشد!");
+        }
+        if (adRequest.getPrice() == null || adRequest.getPrice() < 0) {
+            throw new IllegalArgumentException("قیمت آگهی نامعتبر است!");
+        }
+        if (adRequest.getCategory() == null || adRequest.getCategory().trim().isEmpty()) {
+            throw new IllegalArgumentException("دسته‌بندی آگهی نمی‌تواند خالی باشد!");
         }
 
-        ad.setSeller(realSeller);
-        ad.setStatus("ACTIVE");
-        ad.setCreatedAt(LocalDateTime.now());
+        User seller = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("کاربر یافت نشد!"));
 
-        return advertisementRepository.save(ad);
-    }
+        adRequest.setSeller(seller);
+        adRequest.setStatus("ACTIVE");
 
-    public List<Advertisement> getAllAdvertisements() {
-        return advertisementRepository.findAll();
-    }
-
-    public List<Advertisement> getAdsByCategory(String category) {
-        return advertisementRepository.findByCategory(category);
-    }
-
-    public List<Advertisement> searchAds(String keyword) {
-        return advertisementRepository.findByTitleContaining(keyword);
+        return advertisementRepository.save(adRequest);
     }
 
     @Transactional
-    public void deleteAdvertisement(Long adId, String username) {
-        Advertisement ad = advertisementRepository.findById(adId)
-                .orElseThrow(() -> new RuntimeException("آگهی مورد نظر یافت نشد!"));
-
-        if (!ad.getSeller().getUsername().equals(username)) {
-            throw new RuntimeException("خطای امنیتی: شما اجازه حذف آگهی دیگران را ندارید!");
-        }
-
-        String imageUrl = ad.getImageUrl();
-
-        advertisementRepository.delete(ad);
-
-        if (StringUtils.hasText(imageUrl)) {
-            try {
-                fileStorageService.deleteFile(imageUrl);
-            } catch (Exception e) {
-                System.err.println("خطا در حذف تصویر آگهی: " + e.getMessage());
-            }
-        }
-    }
-
-    @Transactional
-    public Advertisement updateAdvertisement(Long adId, Advertisement updatedAd, MultipartFile newFile, String username) {
+    public Advertisement updateAdvertisement(Long adId, Advertisement adRequest, String username) {
         Advertisement existingAd = advertisementRepository.findById(adId)
-                .orElseThrow(() -> new RuntimeException("آگهی مورد نظر یافت نشد!"));
+                .orElseThrow(() -> new NoSuchElementException("آگهی یافت نشد!"));
 
         if (!existingAd.getSeller().getUsername().equals(username)) {
-            throw new RuntimeException("خطای امنیتی: شما اجازه ویرایش آگهی دیگران را ندارید!");
+            throw new IllegalStateException("شما فقط مجاز به ویرایش آگهی‌های خودتان هستید!");
         }
 
-        if (updatedAd.getTitle() != null) {
-            existingAd.setTitle(updatedAd.getTitle());
-        }
-        if (updatedAd.getDescription() != null) {
-            existingAd.setDescription(updatedAd.getDescription());
-        }
-        if (updatedAd.getPrice() != null) {
-            existingAd.setPrice(updatedAd.getPrice());
-        }
-        if (updatedAd.getCategory() != null) {
-            existingAd.setCategory(updatedAd.getCategory());
+        if ("DELETED".equals(existingAd.getStatus())) {
+            throw new IllegalStateException("آگهی حذف شده قابل ویرایش نیست!");
         }
 
-        if (newFile != null && !newFile.isEmpty()) {
-            String oldImage = existingAd.getImageUrl();
-
-            String newImageFilename = fileStorageService.storeFile(newFile);
-            existingAd.setImageUrl(newImageFilename);
-
-            if (StringUtils.hasText(oldImage)) {
-                try {
-                    fileStorageService.deleteFile(oldImage);
-                } catch (Exception e) {
-                    System.err.println("خطا در حذف عکس قبلی آگهی: " + e.getMessage());
-                }
-            }
+        if (adRequest.getTitle() != null && !adRequest.getTitle().trim().isEmpty()) {
+            existingAd.setTitle(adRequest.getTitle());
+        }
+        if (adRequest.getDescription() != null) {
+            existingAd.setDescription(adRequest.getDescription());
+        }
+        if (adRequest.getPrice() != null && adRequest.getPrice() >= 0) {
+            existingAd.setPrice(adRequest.getPrice());
+        }
+        if (adRequest.getCategory() != null && !adRequest.getCategory().trim().isEmpty()) {
+            existingAd.setCategory(adRequest.getCategory());
+        }
+        if (adRequest.getImageUrl() != null) {
+            existingAd.setImageUrl(adRequest.getImageUrl());
         }
 
         return advertisementRepository.save(existingAd);
     }
-    public List<Advertisement> getUserAdvertisements(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("کاربر یافت نشد!"));
-        return advertisementRepository.findBySellerId(user.getId());
+
+    @Transactional
+    public void deleteAdvertisement(Long adId, String username) {
+        Advertisement existingAd = advertisementRepository.findById(adId)
+                .orElseThrow(() -> new NoSuchElementException("آگهی یافت نشد!"));
+
+        if (!existingAd.getSeller().getUsername().equals(username)) {
+            throw new IllegalStateException("شما فقط مجاز به حذف آگهی‌های خودتان هستید!");
+        }
+
+        existingAd.setStatus("DELETED");
+        advertisementRepository.save(existingAd);
     }
 }
