@@ -25,6 +25,11 @@ public class Advertisement {
     private String status;
     private String imageUrl;
 
+    private String rejectReason;
+
+    public String getRejectReason() { return rejectReason; }
+    public void setRejectReason(String rejectReason) { this.rejectReason = rejectReason; }
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User seller;
