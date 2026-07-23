@@ -17,7 +17,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.net.http.HttpResponse;
-
+import javafx.scene.control.TextInputDialog;
+import java.util.Optional;
 public class AdDetailsController {
 
     @FXML private ImageView adImageView;
@@ -111,8 +112,34 @@ public class AdDetailsController {
 
     @FXML
     protected void onChatClick(ActionEvent event) {
-        messageLabel.setStyle("-fx-text-fill: green;");
-        messageLabel.setText("انتقال به صفحه چت به زودی فعال می‌شود...");
+        try {
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("ارسال پیام");
+            dialog.setHeaderText("اولین پیام خود را برای فروشنده بنویسید:");
+            dialog.setContentText("پیام:");
+
+            Optional<String> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                String msg = result.get().trim();
+                if (!msg.isEmpty()) {
+                    JsonObject body = new JsonObject();
+                    body.addProperty("content", msg);
+
+                    HttpResponse<String> response = ApiClient.post("/api/chat/send-to-ad/" + currentAdId, body.toString());
+
+                    if (response.statusCode() == 200 || response.statusCode() == 201) {
+                        messageLabel.setStyle("-fx-text-fill: green;");
+                        messageLabel.setText("پیام ارسال شد. برای مشاهده چت به بخش 'پیام‌ها' مراجعه کنید.");
+                    } else {
+                        messageLabel.setStyle("-fx-text-fill: red;");
+                        messageLabel.setText("خطا در ارسال پیام.");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            messageLabel.setStyle("-fx-text-fill: red;");
+            messageLabel.setText("خطا در ارتباط با سرور.");
+        }
     }
 
     @FXML

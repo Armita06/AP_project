@@ -227,6 +227,16 @@ public class DashboardController {
 
     @FXML
     protected void onMessagesClick(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("Chat.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("پیام‌های من");
+        } catch (Exception e) {
+            errorLabel.setText("خطا در باز کردن صفحه پیام‌ها.");
+            errorLabel.setTextFill(Color.RED);
+        }
     }
 
     @FXML
