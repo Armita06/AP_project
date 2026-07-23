@@ -127,6 +127,7 @@ public class DashboardController {
     }
 
     private VBox createAdCard(JsonObject ad) {
+
         VBox card = new VBox(10);
         card.setPadding(new Insets(15));
         card.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
@@ -176,6 +177,21 @@ public class DashboardController {
         card.setOnMouseEntered(e -> card.setStyle("-fx-background-color: #f8f9fa; -fx-border-color: #3498db; -fx-border-radius: 5; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(52,152,219,0.3), 5, 0, 0, 2);"));
         card.setOnMouseExited(e -> card.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);"));
 
+        javafx.scene.image.ImageView imageView = new javafx.scene.image.ImageView();
+        imageView.setFitWidth(200);
+        imageView.setFitHeight(150);
+        imageView.setPreserveRatio(true);
+
+        if (ad.has("imageUrl") && !ad.get("imageUrl").isJsonNull()) {
+            String imageVal = ad.get("imageUrl").getAsString();
+
+            String finalUrl = imageVal.startsWith("http") ? imageVal : "http://localhost:8080/uploads/" + imageVal;
+
+            javafx.scene.image.Image image = new javafx.scene.image.Image(finalUrl, true);
+            imageView.setImage(image);
+        }
+
+        card.getChildren().add(0, imageView);
         return card;
     }
 

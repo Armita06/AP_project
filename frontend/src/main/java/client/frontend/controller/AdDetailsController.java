@@ -11,6 +11,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -18,6 +20,7 @@ import java.net.http.HttpResponse;
 
 public class AdDetailsController {
 
+    @FXML private ImageView adImageView;
     @FXML private Label titleLabel;
     @FXML private Label priceLabel;
     @FXML private Label categoryLabel;
@@ -58,6 +61,17 @@ public class AdDetailsController {
                 sellerLabel.setText(sellerUsername);
 
                 descriptionLabel.setText(ad.has("description") && !ad.get("description").isJsonNull() ? ad.get("description").getAsString() : "بدون توضیحات");
+
+                if (ad.has("imageUrl") && !ad.get("imageUrl").isJsonNull()) {
+                    String imageVal = ad.get("imageUrl").getAsString();
+
+                    String finalUrl = imageVal.startsWith("http") ? imageVal : "http://localhost:8080/uploads/" + imageVal;
+
+                    Image image = new Image(finalUrl, true);
+                    adImageView.setImage(image);
+                } else {
+                    adImageView.setImage(null);
+                }
 
                 String currentUser = SessionManager.getInstance().getUsername();
                 if (currentUser != null && currentUser.equals(sellerUsername)) {

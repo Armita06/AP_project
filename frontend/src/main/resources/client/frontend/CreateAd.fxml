@@ -37,6 +37,13 @@
         <Label text="توضیحات" />
         <TextArea fx:id="descriptionField" prefRowCount="4" wrapText="true" />
     </VBox>
+    <VBox spacing="5.0">
+        <Label text="عکس آگهی (اختیاری)" />
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <Button mnemonicParsing="false" onAction="#onSelectImageClick" style="-fx-background-color: #bdc3c7;" text="انتخاب عکس" />
+            <Label fx:id="imageNameLabel" text="عکسی انتخاب نشده است" textFill="GRAY" />
+        </HBox>
+    </VBox>
     <Label fx:id="messageLabel" wrapText="true" />
     <HBox alignment="CENTER" spacing="15.0">
         <Button mnemonicParsing="false" onAction="#onSubmitClick" prefWidth="120.0" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="ثبت آگهی" />

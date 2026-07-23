@@ -5,8 +5,9 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
+<?import javafx.scene.image.ImageView?>
 <VBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="600.0" spacing="15.0" style="-fx-padding: 30; -fx-background-color: #f5f6fa;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.frontend.controller.AdDetailsController">
+    <ImageView fx:id="adImageView" fitHeight="300.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" />
     <Label fx:id="titleLabel" textFill="#2c3e50">
         <font>
             <Font name="System Bold" size="24.0" />
