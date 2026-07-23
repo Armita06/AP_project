@@ -5,47 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a68d8a4e-e69a-48ea-844c-15b2ad916f69" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.postman/resources.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WB01500_BX3353_1007_2460S_M1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ap_project.db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/postman/globals/workspace.globals.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/AdminController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/AdvertisementController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/BookmarkController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/ChatController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/FileController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/RatingController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/UserController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Advertisement.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Bookmark.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Conversation.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Message.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Rating.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/repository/AdvertisementRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/repository/BookmarkRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/repository/ConversationRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/repository/MessageRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/repository/RatingRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/repository/UserRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/security/JwtUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/Application.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/server/WebConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/AdminService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/AdvertisementService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/BookmarkService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/ChatService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/FileStorageService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/RatingService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/UserService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/17ca88a9-0a50-4e95-b9a7-b12661e30aea.jpg" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/MainApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/api/ApiClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/LoginController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/RegisterController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/util/SessionManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/Login.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/Register.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/HelloApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/HelloController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/Launcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/module-info.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/hello-view.fxml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,17 +30,32 @@
   <component name="EmbeddingIndexingInfo">
     <option name="cachedIndexableFilesCount" value="77" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="FxmlFile" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
   </component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="3Grq3BoUvH2JgrV8D9sZflvKjLi" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -73,11 +63,18 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Launcher.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.Application.executor": "Run",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
@@ -85,9 +82,42 @@
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm"
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.JavaFX"
   }
 }]]></component>
+  <component name="RunManager" selected="Application.Launcher">
+    <configuration name="Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="25" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="client.frontend.Launcher" />
+      <module name="frontend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="client.frontend.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="untitled15" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="server.Application" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Launcher" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -108,5 +138,9 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
