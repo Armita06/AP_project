@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="400.0" spacing="15.0" style="-fx-padding: 30; -fx-background-color: #f5f6fa;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.frontend.controller.ProfileController">
+    <Label text="پروفایل کاربری">
+        <font>
+            <Font name="System Bold" size="20.0" />
+        </font>
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Label>
+
+    <VBox spacing="5.0">
+        <Label text="نام و نام خانوادگی" />
+        <TextField fx:id="nameField" />
+    </VBox>
+
+    <VBox spacing="5.0">
+        <Label text="نام کاربری (غیرقابل تغییر)" />
+        <TextField fx:id="usernameField" disable="true" style="-fx-background-color: #e0e0e0;" />
+    </VBox>
+
+    <VBox spacing="5.0">
+        <Label text="شماره تماس" />
+        <TextField fx:id="phoneField" />
+    </VBox>
+
+    <VBox spacing="5.0">
+        <Label text="ایمیل" />
+        <TextField fx:id="emailField" />
+    </VBox>
+
+    <VBox spacing="5.0">
+        <Label text="رمز عبور جدید (برای عدم تغییر، خالی بگذارید)" />
+        <PasswordField fx:id="passwordField" promptText="رمز عبور جدید..." />
+    </VBox>
+
+    <Label fx:id="messageLabel" wrapText="true" />
+
+    <HBox alignment="CENTER" spacing="15.0">
+        <Button mnemonicParsing="false" onAction="#onSubmitClick" prefWidth="120.0" style="-fx-background-color: #3498db; -fx-text-fill: white;" text="ذخیره تغییرات" />
+        <Button mnemonicParsing="false" onAction="#onBackClick" prefWidth="120.0" style="-fx-background-color: #7f8c8d; -fx-text-fill: white;" text="بازگشت" />
+    </HBox>
+</VBox>

@@ -200,6 +200,20 @@ public class DashboardController {
         loadAds();
     }
 
+
+    @FXML
+    protected void onProfileClick(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("Profile.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("پروفایل کاربری");
+        } catch (Exception e) {
+            errorLabel.setText("خطا در باز کردن صفحه پروفایل.");
+            errorLabel.setTextFill(Color.RED);
+        }
+    }
     @FXML
     protected void onClearFiltersClick(ActionEvent event) {
         searchField.clear();

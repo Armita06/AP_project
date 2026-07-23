@@ -56,4 +56,28 @@ public class UserService {
         }
         throw new RuntimeException("Invalid username or password!");
     }
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("کاربر یافت نشد!"));
+    }
+
+    public User updateUserProfile(String username, User updatedData) {
+        User existingUser = getUserByUsername(username);
+
+        if (updatedData.getFullName() != null && !updatedData.getFullName().trim().isEmpty()) {
+            existingUser.setFullName(updatedData.getFullName());
+        }
+        if (updatedData.getPhoneNumber() != null && !updatedData.getPhoneNumber().trim().isEmpty()) {
+            existingUser.setPhoneNumber(updatedData.getPhoneNumber());
+        }
+        if (updatedData.getEmail() != null && !updatedData.getEmail().trim().isEmpty()) {
+            existingUser.setEmail(updatedData.getEmail());
+        }
+
+        if (updatedData.getPassword() != null && !updatedData.getPassword().trim().isEmpty()) {
+            existingUser.setPassword(updatedData.getPassword());
+        }
+
+        return userRepository.save(existingUser);
+    }
 }

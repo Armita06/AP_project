@@ -14,6 +14,7 @@
 
 <BorderPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.frontend.controller.DashboardController">
     <top>
+
         <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: #2c3e50; -fx-padding: 15;">
             <Label fx:id="welcomeLabel" textFill="WHITE">
                 <font>
@@ -25,6 +26,7 @@
             <Button mnemonicParsing="false" onAction="#onMyAdsClick" text="آگهی‌های من" />
             <Button mnemonicParsing="false" onAction="#onCreateAdClick" text="ثبت آگهی جدید" />
             <Button mnemonicParsing="false" onAction="#onMessagesClick" text="پیام‌ها" />
+            <Button mnemonicParsing="false" onAction="#onProfileClick" text="پروفایل من" />
             <Button mnemonicParsing="false" onAction="#onBookmarksClick" text="علاقه‌مندی‌ها" />
             <Button mnemonicParsing="false" onAction="#onLogoutClick" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="خروج" />
         </HBox>

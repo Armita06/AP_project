@@ -52,4 +52,35 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile(@RequestHeader("Authorization") String token) {
+        try {
+            String jwt = token.substring(7);
+
+            String username = JwtUtil.extractUsername(jwt);
+
+            User user = userService.getUserByUsername(username);
+
+            user.setPassword(null);
+
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateProfile(@RequestHeader("Authorization") String token, @RequestBody User updatedUser) {
+        try {
+            String jwt = token.substring(7);
+            String username = JwtUtil.extractUsername(jwt);
+
+            User user = userService.updateUserProfile(username, updatedUser);
+            user.setPassword(null);
+
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
