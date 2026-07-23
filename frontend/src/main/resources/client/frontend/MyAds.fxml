@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane nodeOrientation="RIGHT_TO_LEFT" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.frontend.controller.MyAdsController">
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: #2c3e50; -fx-padding: 15;">
+            <Label text="آگهی‌های من" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="18.0" />
+                </font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#onBackClick" style="-fx-background-color: #95a5a6; -fx-text-fill: white;" text="بازگشت به داشبورد" />
+        </HBox>
+    </top>
+    <center>
+        <VBox spacing="15.0" style="-fx-padding: 20; -fx-background-color: #f5f6fa;">
+            <Label fx:id="messageLabel" wrapText="true" />
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                <FlowPane fx:id="myAdsContainer" hgap="20.0" style="-fx-padding: 10;" vgap="20.0" />
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>
