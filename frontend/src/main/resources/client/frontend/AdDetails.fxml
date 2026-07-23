@@ -66,6 +66,27 @@
         </Label>
     </HBox>
 
+    <VBox spacing="10.0" style="-fx-background-color: #e8f8f5; -fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #1abc9c; -fx-border-radius: 5;">
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <Label text="امتیاز فروشنده:" textFill="#16a085">
+                <font>
+                    <Font name="System Bold" size="14.0" />
+                </font>
+            </Label>
+            <Label fx:id="ratingDisplayLabel" text="در حال دریافت..." textFill="#16a085">
+                <font>
+                    <Font name="System Bold" size="14.0" />
+                </font>
+            </Label>
+        </HBox>
+
+        <HBox fx:id="ratingBox" alignment="CENTER_LEFT" spacing="10.0">
+            <Label text="ثبت امتیاز (۱ تا ۵):" />
+            <javafx.scene.control.ComboBox fx:id="ratingComboBox" prefWidth="80.0" />
+            <Button mnemonicParsing="false" onAction="#onSubmitRatingClick" style="-fx-background-color: #1abc9c; -fx-text-fill: white;" text="ثبت امتیاز" />
+        </HBox>
+    </VBox>
+
     <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;">
         <Label text="توضیحات:" textFill="#7f8c8d">
             <font>

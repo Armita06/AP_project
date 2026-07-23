@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import java.net.http.HttpResponse;
 import javafx.scene.control.TextInputDialog;
 import java.util.Optional;
+import javafx.scene.control.ComboBox;
 public class AdDetailsController {
 
     @FXML private ImageView adImageView;
@@ -31,7 +32,9 @@ public class AdDetailsController {
     @FXML private Label messageLabel;
     @FXML private HBox buyerActionsBox;
     @FXML private HBox ownerActionsBox;
-
+    @FXML private Label ratingDisplayLabel;
+    @FXML private ComboBox<Integer> ratingComboBox;
+    @FXML private HBox ratingBox;
     private Long currentAdId;
     private String sellerUsername;
 
@@ -40,6 +43,55 @@ public class AdDetailsController {
         loadAdDetails();
     }
 
+    private void loadSellerRating(String sellerUsername) {
+        try {
+            HttpResponse<String> response = ApiClient.get("/api/ratings/seller/" + sellerUsername);
+
+            if (response.statusCode() == 200 && response.body() != null) {
+                String ratingStr = response.body().trim();
+                if (ratingStr.isEmpty() || ratingStr.equals("0") || ratingStr.equals("0.0")) {
+                    ratingDisplayLabel.setText("بدون امتیاز");
+                } else {
+                    ratingDisplayLabel.setText(ratingStr + " از ۵ ستاره");
+                }
+            } else {
+                ratingDisplayLabel.setText("نامشخص");
+            }
+        } catch (Exception e) {
+            ratingDisplayLabel.setText("خطا در دریافت امتیاز");
+        }
+    }
+
+    @FXML
+    protected void onSubmitRatingClick(ActionEvent event) {
+        Integer selectedRating = ratingComboBox.getValue();
+
+        if (selectedRating == null) {
+            messageLabel.setStyle("-fx-text-fill: red;");
+            messageLabel.setText("لطفاً یک امتیاز از ۱ تا ۵ انتخاب کنید.");
+            return;
+        }
+
+        try {
+            JsonObject jsonRequest = new JsonObject();
+            jsonRequest.addProperty("sellerUsername", sellerUsername);
+            jsonRequest.addProperty("score", selectedRating);
+
+            HttpResponse<String> response = ApiClient.post("/api/ratings/rate", jsonRequest.toString());
+
+            if (response.statusCode() == 200 || response.statusCode() == 201) {
+                messageLabel.setStyle("-fx-text-fill: green;");
+                messageLabel.setText("امتیاز شما با موفقیت ثبت شد.");
+                loadSellerRating(sellerUsername); // بروزرسانی میانگین امتیازات
+            } else {
+                messageLabel.setStyle("-fx-text-fill: red;");
+                messageLabel.setText("خطا در ثبت امتیاز. ممکن است قبلاً امتیاز داده باشید.");
+            }
+        } catch (Exception e) {
+            messageLabel.setStyle("-fx-text-fill: red;");
+            messageLabel.setText("خطا در ارتباط با سرور برای ثبت امتیاز.");
+        }
+    }
     private void loadAdDetails() {
         try {
             HttpResponse<String> response = ApiClient.get("/api/ads/" + currentAdId);
@@ -81,6 +133,14 @@ public class AdDetailsController {
                     ownerActionsBox.setVisible(true);
                     ownerActionsBox.setManaged(true);
                 }
+                ratingComboBox.getItems().setAll(1, 2, 3, 4, 5);
+
+                if (currentUser != null && currentUser.equals(sellerUsername)) {
+                    ratingBox.setVisible(false);
+                    ratingBox.setManaged(false);
+                }
+
+                loadSellerRating(sellerUsername);
             } else {
                 messageLabel.setStyle("-fx-text-fill: red;");
                 messageLabel.setText("خطا در دریافت اطلاعات آگهی.");
