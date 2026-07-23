@@ -144,8 +144,20 @@ public class AdDetailsController {
 
     @FXML
     protected void onEditClick(ActionEvent event) {
-        messageLabel.setStyle("-fx-text-fill: green;");
-        messageLabel.setText("انتقال به صفحه ویرایش به زودی فعال می‌شود...");
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("EditAd.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+
+            EditAdController controller = fxmlLoader.getController();
+            controller.initData(currentAdId);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("ویرایش آگهی");
+        } catch (Exception e) {
+            messageLabel.setStyle("-fx-text-fill: red;");
+            messageLabel.setText("خطا در باز کردن صفحه ویرایش.");
+        }
     }
 
     @FXML
