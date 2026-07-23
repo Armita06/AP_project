@@ -5,22 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a68d8a4e-e69a-48ea-844c-15b2ad916f69" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/MainApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/api/ApiClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/LoginController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/RegisterController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/util/SessionManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/Login.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/Register.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/AdDetailsController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/AdminPanelController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/BookmarksController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/CreateAdController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/DashboardController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/AdDetails.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/AdminPanel.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/Bookmarks.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/CreateAd.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/Dashboard.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/HelloApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/HelloController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/Launcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/module-info.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/hello-view.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ap_project.db" beforeDir="false" afterPath="$PROJECT_DIR$/ap_project.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/controller/AdvertisementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/controller/AdvertisementController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/service/AdvertisementService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/service/AdvertisementService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/RegisterController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/Login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/Login.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,34 +63,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Launcher.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.Application.executor": "Run",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.JavaFX"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Launcher.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.Application.executor&quot;: &quot;Run&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.JavaFX&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.Launcher">
     <configuration name="Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="25" />
@@ -121,8 +124,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-63390994e64e-intellij.indexing.shared.core-IU-262.8665.258" />
-        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.8665.258" />
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
       </set>
     </attachedChunks>
   </component>
@@ -133,11 +136,24 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1784739838429</updated>
+      <workItem from="1784805838578" duration="2731000" />
+      <workItem from="1784809001235" duration="7426000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backend/src/main/java/service/AdvertisementService.java</url>
+          <line>112</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -25,13 +25,11 @@ public class AdvertisementService {
     @Transactional(readOnly = true)
     public List<Advertisement> searchActiveAdvertisements(String keyword, String category, String city, Double minPrice, Double maxPrice, String sortBy) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-
         if ("cheapest".equalsIgnoreCase(sortBy)) {
             sort = Sort.by(Sort.Direction.ASC, "price");
         } else if ("expensive".equalsIgnoreCase(sortBy)) {
             sort = Sort.by(Sort.Direction.DESC, "price");
         }
-
         return advertisementRepository.searchAdvertisements(keyword, category, city, minPrice, maxPrice, sort);
     }
 
@@ -42,27 +40,30 @@ public class AdvertisementService {
         return advertisementRepository.findBySellerOrderByCreatedAtDesc(seller);
     }
 
+    @Transactional(readOnly = true)
+    public Advertisement getAdById(Long adId) {
+        return advertisementRepository.findById(adId)
+                .orElseThrow(() -> new NoSuchElementException("آگهی یافت نشد."));
+    }
+
     @Transactional
     public Advertisement createAdvertisement(Advertisement adRequest, String username) {
         if (adRequest.getTitle() == null || adRequest.getTitle().trim().isEmpty()) {
-            throw new IllegalArgumentException("عنوان آگهی نمی‌تواند خالی باشد!");
+            throw new IllegalArgumentException("عنوان آگهی الزامی است!");
         }
         if (adRequest.getPrice() == null || adRequest.getPrice() < 0) {
-            throw new IllegalArgumentException("قیمت آگهی نامعتبر است!");
+            throw new IllegalArgumentException("قیمت نامعتبر است!");
         }
         if (adRequest.getCategory() == null || adRequest.getCategory().trim().isEmpty()) {
-            throw new IllegalArgumentException("دسته‌بندی آگهی نمی‌تواند خالی باشد!");
+            throw new IllegalArgumentException("دسته‌بندی الزامی است!");
         }
         if (adRequest.getCity() == null || adRequest.getCity().trim().isEmpty()) {
-            throw new IllegalArgumentException("شهر آگهی نمی‌تواند خالی باشد!");
+            throw new IllegalArgumentException("شهر الزامی است!");
         }
-
         User seller = userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoSuchElementException("کاربر یافت نشد!"));
-
         adRequest.setSeller(seller);
         adRequest.setStatus("PENDING");
-
         return advertisementRepository.save(adRequest);
     }
 
@@ -70,15 +71,12 @@ public class AdvertisementService {
     public Advertisement updateAdvertisement(Long adId, Advertisement adRequest, String username) {
         Advertisement existingAd = advertisementRepository.findById(adId)
                 .orElseThrow(() -> new NoSuchElementException("آگهی یافت نشد!"));
-
         if (!existingAd.getSeller().getUsername().equals(username)) {
-            throw new IllegalStateException("شما فقط مجاز به ویرایش آگهی‌های خودتان هستید!");
+            throw new IllegalStateException("شما اجازه ویرایش این آگهی را ندارید!");
         }
-
         if ("DELETED".equals(existingAd.getStatus()) || "SOLD".equals(existingAd.getStatus())) {
-            throw new IllegalStateException("آگهی حذف شده یا فروخته شده قابل ویرایش نیست!");
+            throw new IllegalStateException("امکان ویرایش آگهی حذف شده یا فروخته شده وجود ندارد!");
         }
-
         if (adRequest.getTitle() != null && !adRequest.getTitle().trim().isEmpty()) {
             existingAd.setTitle(adRequest.getTitle());
         }
@@ -97,9 +95,7 @@ public class AdvertisementService {
         if (adRequest.getImageUrl() != null) {
             existingAd.setImageUrl(adRequest.getImageUrl());
         }
-
         existingAd.setStatus("PENDING");
-
         return advertisementRepository.save(existingAd);
     }
 
@@ -107,11 +103,9 @@ public class AdvertisementService {
     public void markAsSold(Long adId, String username) {
         Advertisement existingAd = advertisementRepository.findById(adId)
                 .orElseThrow(() -> new NoSuchElementException("آگهی یافت نشد!"));
-
         if (!existingAd.getSeller().getUsername().equals(username)) {
-            throw new IllegalStateException("شما فقط مجاز به تغییر وضعیت آگهی‌های خودتان هستید!");
+            throw new IllegalStateException("شما اجازه تغییر وضعیت این آگهی را ندارید!");
         }
-
         existingAd.setStatus("SOLD");
         advertisementRepository.save(existingAd);
     }
@@ -120,11 +114,9 @@ public class AdvertisementService {
     public void deleteAdvertisement(Long adId, String username) {
         Advertisement existingAd = advertisementRepository.findById(adId)
                 .orElseThrow(() -> new NoSuchElementException("آگهی یافت نشد!"));
-
         if (!existingAd.getSeller().getUsername().equals(username)) {
-            throw new IllegalStateException("شما فقط مجاز به حذف آگهی‌های خودتان هستید!");
+            throw new IllegalStateException("شما اجازه حذف این آگهی را ندارید!");
         }
-
         existingAd.setStatus("DELETED");
         advertisementRepository.save(existingAd);
     }

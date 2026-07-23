@@ -12,27 +12,16 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.net.http.HttpResponse;
 
 public class RegisterController {
 
-    @FXML
-    private TextField nameField;
-
-    @FXML
-    private TextField usernameField;
-
-    @FXML
-    private PasswordField passwordField;
-
-    @FXML
-    private TextField phoneField;
-
-    @FXML
-    private TextField emailField;
-
-    @FXML
-    private Label messageLabel;
+    @FXML private TextField nameField;
+    @FXML private TextField usernameField;
+    @FXML private PasswordField passwordField;
+    @FXML private TextField phoneField;
+    @FXML private TextField emailField;
+    @FXML private Label messageLabel;
 
     @FXML
     protected void onRegisterButtonClick(ActionEvent event) {
@@ -48,23 +37,31 @@ public class RegisterController {
                 phone == null || phone.trim().isEmpty() ||
                 email == null || email.trim().isEmpty()) {
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("لطفاً تمام فیلدها را پر کنید.");
+            messageLabel.setText("تمامی فیلدها باید پر شوند.");
             return;
         }
 
         try {
+            // نام کلیدها دقیقاً مطابق مدل User در بک‌اند تنظیم شده است
             String jsonBody = String.format(
-                    "{\"name\":\"%s\", \"username\":\"%s\", \"password\":\"%s\", \"phone\":\"%s\", \"email\":\"%s\"}",
-                    name, username, password, phone, email
+                    "{\"fullName\":\"%s\", \"username\":\"%s\", \"password\":\"%s\", \"phoneNumber\":\"%s\", \"email\":\"%s\"}",
+                    name.trim(), username.trim(), password.trim(), phone.trim(), email.trim()
             );
-            ApiClient.post("/auth/register", jsonBody);
 
-            messageLabel.setStyle("-fx-text-fill: green;");
-            messageLabel.setText("ثبت‌نام با موفقیت انجام شد.");
+            // آدرس صحیح API
+            HttpResponse<String> response = ApiClient.post("/api/users/register", jsonBody);
 
+            // بررسی دقیق کد وضعیت برای اطمینان از ثبت در دیتابیس
+            if (response.statusCode() == 200 || response.statusCode() == 201) {
+                messageLabel.setStyle("-fx-text-fill: green;");
+                messageLabel.setText("ثبت‌نام با موفقیت انجام شد. حالا وارد شوید.");
+            } else {
+                messageLabel.setStyle("-fx-text-fill: red;");
+                messageLabel.setText("خطا در ثبت‌نام: نام کاربری تکراری است یا سرور در دسترس نیست.");
+            }
         } catch (Exception e) {
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("خطا در ثبت‌نام یا ارتباط با سرور.");
+            messageLabel.setText("خطای ارتباط با سرور.");
         }
     }
 
@@ -73,15 +70,12 @@ public class RegisterController {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("Login.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
-
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            stage.setTitle("ورود به سیستم");
+            stage.setTitle("ورود به سامانه");
             stage.setScene(scene);
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("فایل صفحه ورود پیدا نشد.");
+            messageLabel.setText("خطا در باز کردن صفحه ورود.");
         }
     }
 }

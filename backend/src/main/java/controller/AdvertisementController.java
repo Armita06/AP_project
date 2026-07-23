@@ -25,18 +25,18 @@ public class AdvertisementController {
 
     private String extractUsername(String header) {
         if (header == null || !header.startsWith("Bearer ")) {
-            throw new SecurityException("توکن ارسال نشده یا نامعتبر است!");
+            throw new SecurityException("احراز هویت نامعتبر است!");
         }
         String token = header.substring(7);
         if (token.trim().isEmpty() || !JwtUtil.isTokenValid(token)) {
-            throw new SecurityException("توکن منقضی یا نامعتبر است!");
+            throw new SecurityException("توکن نامعتبر یا منقضی شده است!");
         }
         return JwtUtil.extractUsername(token);
     }
 
     private ResponseEntity<Map<String, Object>> buildErrorResponse(Exception e, HttpStatus status) {
         return ResponseEntity.status(status).body(Map.of(
-                "message", e.getMessage(),
+                "message", e.getMessage() != null ? e.getMessage() : "خطای ناشناخته",
                 "status", status.value()
         ));
     }
@@ -64,7 +64,6 @@ public class AdvertisementController {
             @RequestParam(required = false) String sortBy) {
         try {
             List<Advertisement> ads = advertisementService.searchActiveAdvertisements(keyword, category, city, minPrice, maxPrice, sortBy);
-
             List<Map<String, Object>> safeAds = ads.stream().map(ad -> {
                 Map<String, Object> adMap = new HashMap<>();
                 adMap.put("id", ad.getId());
@@ -75,7 +74,6 @@ public class AdvertisementController {
                 adMap.put("imageUrl", ad.getImageUrl());
                 return adMap;
             }).collect(Collectors.toList());
-
             return ResponseEntity.ok(safeAds);
         } catch (Exception e) {
             return buildErrorResponse(e, determineHttpStatus(e));
@@ -87,7 +85,6 @@ public class AdvertisementController {
         try {
             String username = extractUsername(header);
             List<Advertisement> myAds = advertisementService.getUserAdvertisements(username);
-
             List<Map<String, Object>> safeAds = myAds.stream().map(ad -> {
                 Map<String, Object> adMap = new HashMap<>();
                 adMap.put("id", ad.getId());
@@ -99,8 +96,27 @@ public class AdvertisementController {
                 adMap.put("imageUrl", ad.getImageUrl());
                 return adMap;
             }).collect(Collectors.toList());
-
             return ResponseEntity.ok(safeAds);
+        } catch (Exception e) {
+            return buildErrorResponse(e, determineHttpStatus(e));
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getAdById(@PathVariable Long id) {
+        try {
+            Advertisement ad = advertisementService.getAdById(id);
+            Map<String, Object> adMap = new HashMap<>();
+            adMap.put("id", ad.getId());
+            adMap.put("title", ad.getTitle());
+            adMap.put("description", ad.getDescription());
+            adMap.put("price", ad.getPrice());
+            adMap.put("category", ad.getCategory());
+            adMap.put("city", ad.getCity());
+            adMap.put("status", ad.getStatus());
+            adMap.put("seller", ad.getSeller().getUsername());
+            adMap.put("imageUrl", ad.getImageUrl());
+            return ResponseEntity.ok(adMap);
         } catch (Exception e) {
             return buildErrorResponse(e, determineHttpStatus(e));
         }
@@ -114,7 +130,7 @@ public class AdvertisementController {
             String username = extractUsername(header);
             Advertisement newAd = advertisementService.createAdvertisement(adRequest, username);
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
-                    "message", "آگهی با موفقیت ثبت شد و در انتظار تایید مدیر می‌باشد.",
+                    "message", "آگهی با موفقیت ثبت شد.",
                     "advertisementId", newAd.getId()
             ));
         } catch (Exception e) {
@@ -131,7 +147,7 @@ public class AdvertisementController {
             String username = extractUsername(header);
             Advertisement updatedAd = advertisementService.updateAdvertisement(id, adRequest, username);
             return ResponseEntity.ok(Map.of(
-                    "message", "آگهی با موفقیت ویرایش شد و برای تایید مجدد به مدیر ارسال گردید.",
+                    "message", "آگهی با موفقیت به روزرسانی شد.",
                     "advertisementId", updatedAd.getId()
             ));
         } catch (Exception e) {
@@ -147,7 +163,7 @@ public class AdvertisementController {
             String username = extractUsername(header);
             advertisementService.markAsSold(id, username);
             return ResponseEntity.ok(Map.of(
-                    "message", "وضعیت آگهی با موفقیت به فروخته شده تغییر یافت."
+                    "message", "وضعیت آگهی به فروخته شده تغییر یافت."
             ));
         } catch (Exception e) {
             return buildErrorResponse(e, determineHttpStatus(e));
