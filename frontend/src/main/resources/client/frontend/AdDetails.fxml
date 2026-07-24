@@ -5,117 +5,122 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.ImageView?>
-<VBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="600.0" spacing="15.0" style="-fx-padding: 30; -fx-background-color: #f5f6fa;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.frontend.controller.AdDetailsController">
-    <ImageView fx:id="adImageView" fitHeight="300.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" />
-    <Label fx:id="titleLabel" textFill="#2c3e50">
-        <font>
-            <Font name="System Bold" size="24.0" />
-        </font>
-    </Label>
 
-    <HBox alignment="CENTER_LEFT" spacing="10.0">
-        <Label text="قیمت:" textFill="#7f8c8d">
+<ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.frontend.controller.AdDetailsController">
+    <VBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="600.0" prefWidth="600.0" spacing="15.0" style="-fx-padding: 30; -fx-background-color: #f5f6fa;">
+        <ImageView fx:id="adImageView" fitHeight="300.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" />
+        <Label fx:id="titleLabel" textFill="#2c3e50">
             <font>
-                <Font name="System Bold" size="14.0" />
+                <Font name="System Bold" size="24.0" />
             </font>
         </Label>
-        <Label fx:id="priceLabel" textFill="#27ae60">
-            <font>
-                <Font name="System Bold" size="14.0" />
-            </font>
-        </Label>
-    </HBox>
 
-    <HBox alignment="CENTER_LEFT" spacing="10.0">
-        <Label text="دسته‌بندی:" textFill="#7f8c8d">
-            <font>
-                <Font name="System Bold" size="14.0" />
-            </font>
-        </Label>
-        <Label fx:id="categoryLabel">
-            <font>
-                <Font size="14.0" />
-            </font>
-        </Label>
-    </HBox>
-
-    <HBox alignment="CENTER_LEFT" spacing="10.0">
-        <Label text="شهر:" textFill="#7f8c8d">
-            <font>
-                <Font name="System Bold" size="14.0" />
-            </font>
-        </Label>
-        <Label fx:id="cityLabel">
-            <font>
-                <Font size="14.0" />
-            </font>
-        </Label>
-    </HBox>
-
-    <HBox alignment="CENTER_LEFT" spacing="10.0">
-        <Label text="فروشنده:" textFill="#7f8c8d">
-            <font>
-                <Font name="System Bold" size="14.0" />
-            </font>
-        </Label>
-        <Label fx:id="sellerLabel">
-            <font>
-                <Font size="14.0" />
-            </font>
-        </Label>
-    </HBox>
-
-    <VBox spacing="10.0" style="-fx-background-color: #e8f8f5; -fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #1abc9c; -fx-border-radius: 5;">
         <HBox alignment="CENTER_LEFT" spacing="10.0">
-            <Label text="امتیاز فروشنده:" textFill="#16a085">
+            <Label text="قیمت:" textFill="#7f8c8d">
                 <font>
                     <Font name="System Bold" size="14.0" />
                 </font>
             </Label>
-            <Label fx:id="ratingDisplayLabel" text="در حال دریافت..." textFill="#16a085">
+            <Label fx:id="priceLabel" textFill="#27ae60">
                 <font>
                     <Font name="System Bold" size="14.0" />
                 </font>
             </Label>
         </HBox>
 
-        <HBox fx:id="ratingBox" alignment="CENTER_LEFT" spacing="10.0">
-            <Label text="ثبت امتیاز (۱ تا ۵):" />
-            <javafx.scene.control.ComboBox fx:id="ratingComboBox" prefWidth="80.0" />
-            <Button mnemonicParsing="false" onAction="#onSubmitRatingClick" style="-fx-background-color: #1abc9c; -fx-text-fill: white;" text="ثبت امتیاز" />
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <Label text="دسته‌بندی:" textFill="#7f8c8d">
+                <font>
+                    <Font name="System Bold" size="14.0" />
+                </font>
+            </Label>
+            <Label fx:id="categoryLabel">
+                <font>
+                    <Font size="14.0" />
+                </font>
+            </Label>
+        </HBox>
+
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <Label text="شهر:" textFill="#7f8c8d">
+                <font>
+                    <Font name="System Bold" size="14.0" />
+                </font>
+            </Label>
+            <Label fx:id="cityLabel">
+                <font>
+                    <Font size="14.0" />
+                </font>
+            </Label>
+        </HBox>
+
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <Label text="فروشنده:" textFill="#7f8c8d">
+                <font>
+                    <Font name="System Bold" size="14.0" />
+                </font>
+            </Label>
+            <Label fx:id="sellerLabel">
+                <font>
+                    <Font size="14.0" />
+                </font>
+            </Label>
+        </HBox>
+
+        <VBox spacing="10.0" style="-fx-background-color: #e8f8f5; -fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #1abc9c; -fx-border-radius: 5;">
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <Label text="امتیاز فروشنده:" textFill="#16a085">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Label>
+                <Label fx:id="ratingDisplayLabel" text="در حال دریافت..." textFill="#16a085">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Label>
+            </HBox>
+
+            <HBox fx:id="ratingBox" alignment="CENTER_LEFT" spacing="10.0">
+                <Label text="ثبت امتیاز (۱ تا ۵):" />
+                <ComboBox fx:id="ratingComboBox" prefWidth="80.0" />
+                <Button mnemonicParsing="false" onAction="#onSubmitRatingClick" style="-fx-background-color: #1abc9c; -fx-text-fill: white;" text="ثبت امتیاز" />
+            </HBox>
+        </VBox>
+
+        <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;">
+            <Label text="توضیحات:" textFill="#7f8c8d">
+                <font>
+                    <Font name="System Bold" size="14.0" />
+                </font>
+            </Label>
+            <Label fx:id="descriptionLabel" wrapText="true">
+                <font>
+                    <Font size="14.0" />
+                </font>
+            </Label>
+        </VBox>
+
+        <Label fx:id="messageLabel" wrapText="true" />
+
+        <HBox fx:id="buyerActionsBox" alignment="CENTER_LEFT" spacing="15.0">
+            <Button mnemonicParsing="false" onAction="#onBookmarkClick" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="نشان کردن" />
+            <Button mnemonicParsing="false" onAction="#onChatClick" style="-fx-background-color: #3498db; -fx-text-fill: white;" text="ارسال پیام به فروشنده" />
+        </HBox>
+
+        <HBox fx:id="ownerActionsBox" alignment="CENTER_LEFT" spacing="15.0" visible="false" managed="false">
+            <Button mnemonicParsing="false" onAction="#onEditClick" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="ویرایش آگهی" />
+            <Button mnemonicParsing="false" onAction="#onSoldClick" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="تغییر به فروخته شده" />
+            <Button mnemonicParsing="false" onAction="#onDeleteClick" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="حذف آگهی" />
+        </HBox>
+
+        <Region VBox.vgrow="ALWAYS" />
+
+        <HBox alignment="CENTER_LEFT">
+            <Button mnemonicParsing="false" onAction="#onBackClick" style="-fx-background-color: #95a5a6; -fx-text-fill: white;" text="بازگشت" />
         </HBox>
     </VBox>
-
-    <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;">
-        <Label text="توضیحات:" textFill="#7f8c8d">
-            <font>
-                <Font name="System Bold" size="14.0" />
-            </font>
-        </Label>
-        <Label fx:id="descriptionLabel" wrapText="true">
-            <font>
-                <Font size="14.0" />
-            </font>
-        </Label>
-    </VBox>
-
-    <Label fx:id="messageLabel" wrapText="true" />
-
-    <HBox fx:id="buyerActionsBox" alignment="CENTER_LEFT" spacing="15.0">
-        <Button mnemonicParsing="false" onAction="#onBookmarkClick" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="نشان کردن" />
-        <Button mnemonicParsing="false" onAction="#onChatClick" style="-fx-background-color: #3498db; -fx-text-fill: white;" text="ارسال پیام به فروشنده" />
-    </HBox>
-
-    <HBox fx:id="ownerActionsBox" alignment="CENTER_LEFT" spacing="15.0" visible="false" managed="false">
-        <Button mnemonicParsing="false" onAction="#onEditClick" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="ویرایش آگهی" />
-        <Button mnemonicParsing="false" onAction="#onSoldClick" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="تغییر به فروخته شده" />
-        <Button mnemonicParsing="false" onAction="#onDeleteClick" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="حذف آگهی" />
-    </HBox>
-
-    <Region VBox.vgrow="ALWAYS" />
-
-    <HBox alignment="CENTER_LEFT">
-        <Button mnemonicParsing="false" onAction="#onBackClick" style="-fx-background-color: #95a5a6; -fx-text-fill: white;" text="بازگشت" />
-    </HBox>
-</VBox>
+</ScrollPane>

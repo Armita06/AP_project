@@ -48,11 +48,24 @@ public class AdDetailsController {
             HttpResponse<String> response = ApiClient.get("/api/ratings/seller/" + sellerUsername);
 
             if (response.statusCode() == 200 && response.body() != null) {
-                String ratingStr = response.body().trim();
-                if (ratingStr.isEmpty() || ratingStr.equals("0") || ratingStr.equals("0.0")) {
+                JsonObject stats = JsonParser.parseString(response.body()).getAsJsonObject();
+
+                String ratingStr = "نامشخص";
+                if (stats.has("averageScore") && !stats.get("averageScore").isJsonNull()) {
+                    ratingStr = stats.get("averageScore").getAsString();
+                } else if (stats.has("average") && !stats.get("average").isJsonNull()) {
+                    ratingStr = stats.get("average").getAsString();
+                }
+
+                if (ratingStr.equals("0") || ratingStr.equals("0.0") || ratingStr.equals("نامشخص")) {
                     ratingDisplayLabel.setText("بدون امتیاز");
                 } else {
-                    ratingDisplayLabel.setText(ratingStr + " از ۵ ستاره");
+                    try {
+                        double ratingVal = Double.parseDouble(ratingStr);
+                        ratingDisplayLabel.setText(String.format("%.1f از ۵ ستاره", ratingVal));
+                    } catch (NumberFormatException e) {
+                        ratingDisplayLabel.setText(ratingStr + " از ۵ ستاره");
+                    }
                 }
             } else {
                 ratingDisplayLabel.setText("نامشخص");
@@ -74,18 +87,26 @@ public class AdDetailsController {
 
         try {
             JsonObject jsonRequest = new JsonObject();
-            jsonRequest.addProperty("sellerUsername", sellerUsername);
             jsonRequest.addProperty("score", selectedRating);
+            jsonRequest.addProperty("comment", "");
 
-            HttpResponse<String> response = ApiClient.post("/api/ratings/rate", jsonRequest.toString());
+            HttpResponse<String> response = ApiClient.post("/api/ratings/add/" + currentAdId, jsonRequest.toString());
 
             if (response.statusCode() == 200 || response.statusCode() == 201) {
                 messageLabel.setStyle("-fx-text-fill: green;");
                 messageLabel.setText("امتیاز شما با موفقیت ثبت شد.");
-                loadSellerRating(sellerUsername); // بروزرسانی میانگین امتیازات
+                loadSellerRating(sellerUsername);
             } else {
+                String errorMsg = "خطا در ثبت امتیاز. ممکن است قبلاً امتیاز داده باشید.";
+                try {
+                    JsonObject errorObj = JsonParser.parseString(response.body()).getAsJsonObject();
+                    if (errorObj.has("message") && !errorObj.get("message").isJsonNull()) {
+                        errorMsg = errorObj.get("message").getAsString();
+                    }
+                } catch (Exception ignored) {}
+
                 messageLabel.setStyle("-fx-text-fill: red;");
-                messageLabel.setText("خطا در ثبت امتیاز. ممکن است قبلاً امتیاز داده باشید.");
+                messageLabel.setText(errorMsg);
             }
         } catch (Exception e) {
             messageLabel.setStyle("-fx-text-fill: red;");

@@ -13,8 +13,14 @@ public class MainApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("Login.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
-        stage.setTitle("ورود به سیستم");
-        stage.setResizable(false);
+        stage.setTitle("سامانه ثبت آگهی دست‌دوم");
+
+        stage.setResizable(true);
+
+        stage.setMinWidth(800);
+        stage.setMinHeight(600);
+        stage.setMaximized(true);
+
         stage.setScene(scene);
         stage.show();
     }

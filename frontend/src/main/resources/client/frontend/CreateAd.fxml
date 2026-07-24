@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.ScrollPane?>
 
 <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="500.0" spacing="15.0" style="-fx-padding: 30; -fx-background-color: #f5f6fa;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.frontend.controller.CreateAdController">
     <Label text="ثبت آگهی جدید">
