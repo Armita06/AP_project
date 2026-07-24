@@ -19,6 +19,7 @@
                 </font>
             </Label>
             <Region HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#onViewStatsClick" style="-fx-background-color: #3498db; -fx-text-fill: white;" text="مشاهده آمار سیستم" />
             <Button mnemonicParsing="false" onAction="#onBackClick" text="بازگشت به داشبورد" />
         </HBox>
     </top>

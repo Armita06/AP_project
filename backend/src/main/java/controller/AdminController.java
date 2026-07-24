@@ -2,6 +2,8 @@ package controller;
 
 import model.Advertisement;
 import model.User;
+import repository.AdvertisementRepository;
+import repository.UserRepository;
 import service.AdminService;
 import security.JwtUtil;
 import org.springframework.http.HttpStatus;
@@ -18,9 +20,13 @@ import java.util.stream.Collectors;
 public class AdminController {
 
     private final AdminService adminService;
+    private final UserRepository userRepository;
+    private final AdvertisementRepository advertisementRepository;
 
-    public AdminController(AdminService adminService) {
+    public AdminController(AdminService adminService, UserRepository userRepository, AdvertisementRepository advertisementRepository) {
         this.adminService = adminService;
+        this.userRepository = userRepository;
+        this.advertisementRepository = advertisementRepository;
     }
 
     private String extractUsername(String header) {
@@ -136,11 +142,20 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/stats")
+    @GetMapping({"/stats", "/statistics"})
     public ResponseEntity<?> getSystemStats(@RequestHeader(value = "Authorization", required = false) String header) {
         try {
             String username = extractUsername(header);
-            Map<String, Object> stats = adminService.getSystemStats(username);
+
+            Map<String, Object> stats = new HashMap<>();
+
+            stats.put("totalUsers", userRepository.count());
+            stats.put("totalAds", advertisementRepository.countByStatusNot("DELETED"));
+
+            stats.put("pendingAds", advertisementRepository.findByStatusOrderByCreatedAtDesc("PENDING").size());
+
+            stats.put("totalReports", 0);
+
             return ResponseEntity.ok(stats);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));

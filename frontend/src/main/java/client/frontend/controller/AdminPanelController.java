@@ -166,4 +166,16 @@ public class AdminPanelController {
             messageLabel.setTextFill(Color.RED);
         }
     }
+    @FXML
+    protected void onViewStatsClick(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("AdminStats.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("داشبورد آماری");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
