@@ -5,24 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a68d8a4e-e69a-48ea-844c-15b2ad916f69" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/AdDetailsController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/AdminPanelController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/BookmarksController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/CreateAdController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/DashboardController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/AdDetails.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/AdminPanel.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/Bookmarks.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/CreateAd.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/Dashboard.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ap_project.db" beforeDir="false" afterPath="$PROJECT_DIR$/ap_project.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/controller/AdvertisementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/controller/AdvertisementController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/service/AdvertisementService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/service/AdvertisementService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/WB01500_BX3353_1007_2460S_M1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ap_project.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/uploads/17ca88a9-0a50-4e95-b9a7-b12661e30aea.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/uploads/8c45988d-5baa-4128-9d21-b10e48087ec6.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/uploads/f98dabaf-6239-4012-82de-7a3dd21fc323.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/api/ApiClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/api/ApiClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/ChatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/ChatController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/DashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/DashboardController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/MyAdsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/MyAdsController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/RegisterController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/Login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/Login.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +87,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.Launcher">
+  <component name="RunManager" selected="Spring Boot.Application">
     <configuration name="Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="25" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -137,7 +132,10 @@
       <option name="presentableId" value="Default" />
       <updated>1784739838429</updated>
       <workItem from="1784805838578" duration="2731000" />
-      <workItem from="1784809001235" duration="7426000" />
+      <workItem from="1784809001235" duration="7986000" />
+      <workItem from="1784826013904" duration="1381000" />
+      <workItem from="1784845193630" duration="3129000" />
+      <workItem from="1784854849642" duration="2330000" />
     </task>
     <servers />
   </component>

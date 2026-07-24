@@ -5,6 +5,7 @@ import client.frontend.api.ApiClient;
 import client.frontend.util.SessionManager;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,8 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import java.net.http.HttpResponse;
 
 public class LoginController {
 
@@ -35,44 +34,56 @@ public class LoginController {
 
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("نام کاربری و رمز عبور نباید خالی باشند.");
+            messageLabel.setText("لطفاً نام کاربری و رمز عبور را وارد کنید.");
             return;
         }
 
-        try {
-            JsonObject jsonRequest = new JsonObject();
-            jsonRequest.addProperty("username", username.trim());
-            jsonRequest.addProperty("password", password);
+        messageLabel.setStyle("-fx-text-fill: blue;");
+        messageLabel.setText("در حال برقراری ارتباط...");
 
-            HttpResponse<String> response = ApiClient.post("/api/users/login", jsonRequest.toString());
+        JsonObject jsonRequest = new JsonObject();
+        jsonRequest.addProperty("username", username.trim());
+        jsonRequest.addProperty("password", password);
 
-            if (response.statusCode() == 200 && response.body() != null) {
-                JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
+        ApiClient.post("/api/users/login", jsonRequest.toString()).thenAccept(response -> {
+            Platform.runLater(() -> {
+                try {
+                    if (response.statusCode() == 200 && response.body() != null) {
+                        JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
 
-                if (jsonObject.has("token") && jsonObject.has("role")) {
-                    String token = jsonObject.get("token").getAsString();
-                    String role = jsonObject.get("role").getAsString();
+                        if (jsonObject.has("token") && jsonObject.has("role")) {
+                            String token = jsonObject.get("token").getAsString();
+                            String role = jsonObject.get("role").getAsString();
 
-                    SessionManager.getInstance().login(token, username, role);
+                            SessionManager.getInstance().login(token, username, role);
 
-                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("Dashboard.fxml"));
-                    Scene scene = new Scene(fxmlLoader.load());
-                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    stage.setScene(scene);
-                    stage.setTitle("سامانه ثبت آگهی دست دوم - داشبورد");
-                    stage.centerOnScreen();
-                } else {
+                            FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("Dashboard.fxml"));
+                            Scene scene = new Scene(fxmlLoader.load());
+                            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+                            stage.setScene(scene);
+                            stage.setTitle("داشبورد");
+                            stage.centerOnScreen();
+                        } else {
+                            messageLabel.setStyle("-fx-text-fill: red;");
+                            messageLabel.setText("اطلاعات دریافتی از سرور نامعتبر است.");
+                        }
+                    } else {
+                        messageLabel.setStyle("-fx-text-fill: red;");
+                        messageLabel.setText("نام کاربری یا رمز عبور اشتباه است.");
+                    }
+                } catch (Exception e) {
                     messageLabel.setStyle("-fx-text-fill: red;");
-                    messageLabel.setText("پاسخ نامعتبر از سمت سرور.");
+                    messageLabel.setText("خطا در پردازش اطلاعات.");
                 }
-            } else {
+            });
+        }).exceptionally(ex -> {
+            Platform.runLater(() -> {
                 messageLabel.setStyle("-fx-text-fill: red;");
-                messageLabel.setText("نام کاربری یا رمز عبور اشتباه است یا حساب مسدود شده است.");
-            }
-        } catch (Exception e) {
-            messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("خطا در ارتباط با سرور.");
-        }
+                messageLabel.setText("خطا در ارتباط با سرور.");
+            });
+            return null;
+        });
     }
 
     @FXML
@@ -81,11 +92,12 @@ public class LoginController {
             FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("Register.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setTitle("ثبت نام");
+
+            stage.setTitle("ثبت‌نام");
             stage.setScene(scene);
         } catch (Exception e) {
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("خطا در بارگذاری صفحه ثبت نام.");
+            messageLabel.setText("خطا در باز کردن صفحه ثبت‌نام.");
         }
     }
 }
