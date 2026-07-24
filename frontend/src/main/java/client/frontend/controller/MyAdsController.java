@@ -6,7 +6,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +22,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+import java.net.http.HttpResponse;
+
 public class MyAdsController {
 
     @FXML private FlowPane myAdsContainer;
@@ -37,38 +38,32 @@ public class MyAdsController {
         myAdsContainer.getChildren().clear();
         messageLabel.setText("");
 
-        ApiClient.get("/api/ads/my-ads").thenAccept(response -> {
-            Platform.runLater(() -> {
-                try {
-                    if (response.statusCode() == 200 && response.body() != null) {
-                        JsonArray adsArray = JsonParser.parseString(response.body()).getAsJsonArray();
-                        if (adsArray.isEmpty()) {
-                            messageLabel.setText("شما هنوز آگهی ثبت نکرده‌اید.");
-                            messageLabel.setTextFill(Color.GRAY);
-                            messageLabel.setFont(Font.font("System", FontWeight.BOLD, 15));
-                            return;
-                        }
-                        for (JsonElement element : adsArray) {
-                            JsonObject ad = element.getAsJsonObject();
-                            VBox adCard = createMyAdCard(ad);
-                            myAdsContainer.getChildren().add(adCard);
-                        }
-                    } else {
-                        messageLabel.setText("خطا در دریافت آگهی‌ها.");
-                        messageLabel.setTextFill(Color.RED);
-                    }
-                } catch (Exception e) {
-                    messageLabel.setText("خطا در پردازش اطلاعات.");
-                    messageLabel.setTextFill(Color.RED);
+        try {
+            HttpResponse<String> response = ApiClient.get("/api/ads/my-ads");
+
+            if (response.statusCode() == 200 && response.body() != null) {
+                JsonArray adsArray = JsonParser.parseString(response.body()).getAsJsonArray();
+
+                if (adsArray.isEmpty()) {
+                    messageLabel.setText("شما هنوز هیچ آگهی ثبت نکرده‌اید.");
+                    messageLabel.setTextFill(Color.GRAY);
+                    messageLabel.setFont(Font.font("System", FontWeight.BOLD, 15));
+                    return;
                 }
-            });
-        }).exceptionally(ex -> {
-            Platform.runLater(() -> {
-                messageLabel.setText("خطا در ارتباط با سرور.");
+
+                for (JsonElement element : adsArray) {
+                    JsonObject ad = element.getAsJsonObject();
+                    VBox adCard = createMyAdCard(ad);
+                    myAdsContainer.getChildren().add(adCard);
+                }
+            } else {
+                messageLabel.setText("خطا در دریافت آگهی‌ها.");
                 messageLabel.setTextFill(Color.RED);
-            });
-            return null;
-        });
+            }
+        } catch (Exception e) {
+            messageLabel.setText("خطا در ارتباط با سرور.");
+            messageLabel.setTextFill(Color.RED);
+        }
     }
 
     private VBox createMyAdCard(JsonObject ad) {
@@ -83,21 +78,14 @@ public class MyAdsController {
         imageView.setPreserveRatio(true);
 
         if (ad.has("imageUrl") && !ad.get("imageUrl").isJsonNull() && !ad.get("imageUrl").getAsString().trim().isEmpty()) {
-            String imageVal = ad.get("imageUrl").getAsString();
+            String[] urls = ad.get("imageUrl").getAsString().split(",");
+            String imageVal = urls[0];
             String finalUrl = imageVal.startsWith("http") ? imageVal : "http://localhost:8080/uploads/" + imageVal;
             Image image = new Image(finalUrl, true);
             imageView.setImage(image);
         } else {
-            try {
-                java.net.URL defaultImgUrl = MainApplication.class.getResource("no-image.png");
-                if (defaultImgUrl != null) {
-                    imageView.setImage(new Image(defaultImgUrl.toExternalForm()));
-                } else {
-                    imageView.setImage(new Image("https://via.placeholder.com/200x150?text=No+Image"));
-                }
-            } catch (Exception ignored) {
-                imageView.setImage(new Image("https://via.placeholder.com/200x150?text=No+Image"));
-            }
+            Image defaultImage = new Image("https://placehold.co/200x150/e0e0e0/808080?text=No+Image", true);
+            imageView.setImage(defaultImage);
         }
 
         String title = ad.has("title") && !ad.get("title").isJsonNull() ? ad.get("title").getAsString() : "بدون عنوان";
@@ -124,13 +112,15 @@ public class MyAdsController {
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("AdDetails.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
+
                     AdDetailsController controller = fxmlLoader.getController();
                     controller.initData(adId);
+
                     Stage stage = (Stage) card.getScene().getWindow();
                     stage.setScene(scene);
                     stage.setTitle("جزئیات آگهی");
                 } catch (Exception e) {
-                    messageLabel.setText("خطا در باز کردن آگهی.");
+                    messageLabel.setText("خطا در باز کردن جزئیات آگهی.");
                     messageLabel.setTextFill(Color.RED);
                 }
             }
@@ -145,7 +135,7 @@ public class MyAdsController {
     private String translateStatus(String status) {
         switch (status.toUpperCase()) {
             case "PENDING": return "در انتظار تایید";
-            case "ACTIVE": return "فعال";
+            case "ACTIVE": return "تایید شده";
             case "REJECTED": return "رد شده";
             case "SOLD": return "فروخته شده";
             default: return "نامشخص";

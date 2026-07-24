@@ -7,17 +7,17 @@
     <list default="true" id="a68d8a4e-e69a-48ea-844c-15b2ad916f69" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/WB01500_BX3353_1007_2460S_M1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/ap_project.db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/uploads/17ca88a9-0a50-4e95-b9a7-b12661e30aea.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/uploads/8c45988d-5baa-4128-9d21-b10e48087ec6.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/uploads/f98dabaf-6239-4012-82de-7a3dd21fc323.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/api/ApiClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/api/ApiClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/AdDetailsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/AdDetailsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/BookmarksController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/BookmarksController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/ChatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/ChatController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/CreateAdController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/CreateAdController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/DashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/DashboardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/EditAdController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/EditAdController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/LoginController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/MyAdsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/MyAdsController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/java/client/frontend/controller/RegisterController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/AdDetails.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/resources/client/frontend/AdDetails.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +87,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Spring Boot.Application">
+  <component name="RunManager" selected="Application.Launcher">
     <configuration name="Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="25" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -102,6 +102,17 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="untitled15" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="untitled15" />
+      <option name="filePath" />
+      <method v="2" />
     </configuration>
     <configuration name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="untitled15" />

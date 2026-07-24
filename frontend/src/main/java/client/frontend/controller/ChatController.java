@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +65,7 @@ public class ChatController {
             }
         });
 
+        // تایمر برای رفرش خودکار پیام‌ها هر ۳ ثانیه
         chatRefreshTimeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
             if (currentConversationId != null) {
                 loadMessages(currentConversationId, false);
@@ -74,73 +76,65 @@ public class ChatController {
     }
 
     private void loadConversations() {
-        ApiClient.get("/api/chat/conversations").thenAccept(response -> {
-            Platform.runLater(() -> {
-                try {
-                    if (response.statusCode() == 200 && response.body() != null) {
-                        JsonArray array = JsonParser.parseString(response.body()).getAsJsonArray();
-                        conversations.clear();
-                        conversationsList.getItems().clear();
+        try {
+            HttpResponse<String> response = ApiClient.get("/api/chat/conversations");
+            if (response.statusCode() == 200 && response.body() != null) {
+                JsonArray array = JsonParser.parseString(response.body()).getAsJsonArray();
+                conversations.clear();
+                conversationsList.getItems().clear();
 
-                        for (JsonElement element : array) {
-                            JsonObject conv = element.getAsJsonObject();
-                            conversations.add(conv);
+                for (JsonElement element : array) {
+                    JsonObject conv = element.getAsJsonObject();
+                    conversations.add(conv);
 
-                            String display = "گفت‌وگو " + conv.get("id").getAsLong();
-                            if (conv.has("advertisement") && !conv.get("advertisement").isJsonNull()) {
-                                display = conv.getAsJsonObject("advertisement").get("title").getAsString();
-                            }
-                            conversationsList.getItems().add(display);
-                        }
-                    } else {
-                        conversationsMessageLabel.setText("خطا در دریافت لیست گفت‌وگوها.");
+                    String display = "گفت‌وگو " + conv.get("id").getAsLong();
+                    if (conv.has("advertisement") && !conv.get("advertisement").isJsonNull()) {
+                        display = conv.getAsJsonObject("advertisement").get("title").getAsString();
                     }
-                } catch (Exception e) {
-                    conversationsMessageLabel.setText("خطا در پردازش اطلاعات.");
+                    conversationsList.getItems().add(display);
                 }
-            });
-        }).exceptionally(ex -> {
-            Platform.runLater(() -> conversationsMessageLabel.setText("خطا در ارتباط با سرور."));
-            return null;
-        });
+            } else {
+                conversationsMessageLabel.setText("خطا در دریافت لیست گفت‌وگوها.");
+            }
+        } catch (Exception e) {
+            conversationsMessageLabel.setText("خطا در پردازش اطلاعات.");
+        }
     }
 
     private void loadMessages(Long conversationId, boolean forceScroll) {
-        ApiClient.get("/api/chat/messages/" + conversationId).thenAccept(response -> {
-            Platform.runLater(() -> {
-                try {
-                    if (response.statusCode() == 200 && response.body() != null) {
-                        JsonArray array = JsonParser.parseString(response.body()).getAsJsonArray();
+        try {
+            HttpResponse<String> response = ApiClient.get("/api/chat/messages/" + conversationId);
+            if (response.statusCode() == 200 && response.body() != null) {
+                JsonArray array = JsonParser.parseString(response.body()).getAsJsonArray();
 
-                        if (array.size() != messagesContainer.getChildren().size()) {
-                            messagesContainer.getChildren().clear();
+                // فقط اگر پیام جدیدی آمده بود صفحه را آپدیت کن
+                if (array.size() != messagesContainer.getChildren().size()) {
+                    messagesContainer.getChildren().clear();
 
-                            for (JsonElement element : array) {
-                                JsonObject msg = element.getAsJsonObject();
-                                String sender = "";
-                                if (msg.has("sender") && msg.get("sender").isJsonObject()) {
-                                    sender = msg.getAsJsonObject("sender").get("username").getAsString();
-                                }
-
-                                String text = msg.has("content") ? msg.get("content").getAsString() : "";
-                                boolean isMe = currentUser != null && currentUser.equals(sender);
-
-                                addMessageBubble(text, isMe);
-                            }
-
-                            if (forceScroll || messagesScrollPane.getVvalue() == 1.0) {
-                                messagesScrollPane.layout();
-                                messagesScrollPane.setVvalue(1.0);
-                            }
+                    for (JsonElement element : array) {
+                        JsonObject msg = element.getAsJsonObject();
+                        String sender = "";
+                        if (msg.has("sender") && msg.get("sender").isJsonObject()) {
+                            sender = msg.getAsJsonObject("sender").get("username").getAsString();
                         }
+
+                        String text = msg.has("content") ? msg.get("content").getAsString() : "";
+                        boolean isMe = currentUser != null && currentUser.equals(sender);
+
+                        addMessageBubble(text, isMe);
                     }
-                } catch (Exception e) {
-                    chatWithLabel.setText("خطا در دریافت پیام‌ها.");
+
+                    if (forceScroll || messagesScrollPane.getVvalue() == 1.0) {
+                        Platform.runLater(() -> {
+                            messagesScrollPane.layout();
+                            messagesScrollPane.setVvalue(1.0);
+                        });
+                    }
                 }
-            });
-        }).exceptionally(ex -> {
-            return null;
-        });
+            }
+        } catch (Exception e) {
+            chatWithLabel.setText("خطا در دریافت پیام‌ها.");
+        }
     }
 
     private void addMessageBubble(String text, boolean isMe) {
@@ -161,19 +155,18 @@ public class ChatController {
         String text = messageInput.getText().trim();
         if (text.isEmpty() || currentConversationId == null) return;
 
-        JsonObject body = new JsonObject();
-        body.addProperty("content", text);
-        messageInput.clear();
+        try {
+            JsonObject body = new JsonObject();
+            body.addProperty("content", text);
 
-        ApiClient.post("/api/chat/reply/" + currentConversationId, body.toString()).thenAccept(response -> {
-            Platform.runLater(() -> {
-                if (response.statusCode() == 200 || response.statusCode() == 201) {
-                    loadMessages(currentConversationId, true);
-                }
-            });
-        }).exceptionally(ex -> {
-            return null;
-        });
+            HttpResponse<String> response = ApiClient.post("/api/chat/reply/" + currentConversationId, body.toString());
+            if (response.statusCode() == 200 || response.statusCode() == 201) {
+                messageInput.clear();
+                loadMessages(currentConversationId, true);
+            }
+        } catch (Exception e) {
+            chatWithLabel.setText("خطا در ارسال پیام.");
+        }
     }
 
     @FXML

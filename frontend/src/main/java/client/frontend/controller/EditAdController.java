@@ -17,9 +17,10 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditAdController {
-
     @FXML private TextField titleField;
     @FXML private TextField categoryField;
     @FXML private TextField cityField;
@@ -29,7 +30,7 @@ public class EditAdController {
     @FXML private Label imageNameLabel;
 
     private Long currentAdId;
-    private File selectedImageFile = null;
+    private List<File> selectedImageFiles = new ArrayList<>();
     private String existingImageUrl = "";
 
     public void initData(Long adId) {
@@ -42,38 +43,40 @@ public class EditAdController {
             HttpResponse<String> response = ApiClient.get("/api/ads/" + currentAdId);
             if (response.statusCode() == 200 && response.body() != null) {
                 JsonObject ad = JsonParser.parseString(response.body()).getAsJsonObject();
-
                 if (ad.has("title") && !ad.get("title").isJsonNull()) titleField.setText(ad.get("title").getAsString());
                 if (ad.has("category") && !ad.get("category").isJsonNull()) categoryField.setText(ad.get("category").getAsString());
                 if (ad.has("city") && !ad.get("city").isJsonNull()) cityField.setText(ad.get("city").getAsString());
                 if (ad.has("price") && !ad.get("price").isJsonNull()) priceField.setText(String.format("%.0f", ad.get("price").getAsDouble()));
                 if (ad.has("description") && !ad.get("description").isJsonNull()) descriptionField.setText(ad.get("description").getAsString());
-                if (ad.has("imageUrl") && !ad.get("imageUrl").isJsonNull()) existingImageUrl = ad.get("imageUrl").getAsString();
-
+                if (ad.has("imageUrl") && !ad.get("imageUrl").isJsonNull()) {
+                    existingImageUrl = ad.get("imageUrl").getAsString();
+                    if(!existingImageUrl.trim().isEmpty()) {
+                        int count = existingImageUrl.split(",").length;
+                        imageNameLabel.setText(count + " عکس از قبل موجود است");
+                    }
+                }
             } else {
                 messageLabel.setStyle("-fx-text-fill: red;");
-                messageLabel.setText("خطا در دریافت اطلاعات قبلی آگهی.");
+                messageLabel.setText("خطا در دریافت اطلاعات آگهی.");
             }
         } catch (Exception e) {
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("خطای ارتباط با سرور.");
+            messageLabel.setText("خطا در ارتباط با سرور.");
         }
     }
 
     @FXML
     protected void onSelectImageClick(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("انتخاب عکس جدید");
+        fileChooser.setTitle("انتخاب عکس‌های جدید");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
         );
-
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        File file = fileChooser.showOpenDialog(stage);
-
-        if (file != null) {
-            selectedImageFile = file;
-            imageNameLabel.setText(file.getName());
+        List<File> files = fileChooser.showOpenMultipleDialog(stage);
+        if (files != null && !files.isEmpty()) {
+            selectedImageFiles = files;
+            imageNameLabel.setText(files.size() + " عکس جدید انتخاب شد");
             imageNameLabel.setStyle("-fx-text-fill: black;");
         }
     }
@@ -97,27 +100,28 @@ public class EditAdController {
             price = Double.parseDouble(priceStr.trim());
         } catch (NumberFormatException e) {
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("مبلغ نامعتبر است.");
+            messageLabel.setText("قیمت نامعتبر است.");
             return;
         }
 
         try {
             String uploadedImageUrl = existingImageUrl;
-
-            if (selectedImageFile != null) {
-                HttpResponse<String> uploadResponse = ApiClient.uploadFile("/api/files/upload", selectedImageFile);
-                if (uploadResponse.statusCode() == 200 || uploadResponse.statusCode() == 201) {
-                    String body = uploadResponse.body();
-                    if (body.trim().startsWith("{")) {
-                        JsonObject resObj = JsonParser.parseString(body).getAsJsonObject();
-                        uploadedImageUrl = resObj.has("fileName") ? resObj.get("fileName").getAsString() : body;
-                    } else {
-                        uploadedImageUrl = body.trim();
+            if (!selectedImageFiles.isEmpty()) {
+                List<String> uploadedUrls = new ArrayList<>();
+                for (File file : selectedImageFiles) {
+                    HttpResponse<String> uploadResponse = ApiClient.uploadFile("/api/files/upload", file);
+                    if (uploadResponse.statusCode() == 200 || uploadResponse.statusCode() == 201) {
+                        String body = uploadResponse.body();
+                        if (body.trim().startsWith("{")) {
+                            JsonObject resObj = JsonParser.parseString(body).getAsJsonObject();
+                            uploadedUrls.add(resObj.has("fileName") ? resObj.get("fileName").getAsString() : body);
+                        } else {
+                            uploadedUrls.add(body.trim());
+                        }
                     }
-                } else {
-                    messageLabel.setStyle("-fx-text-fill: red;");
-                    messageLabel.setText("خطا در آپلود عکس جدید.");
-                    return;
+                }
+                if (!uploadedUrls.isEmpty()) {
+                    uploadedImageUrl = String.join(",", uploadedUrls);
                 }
             }
 
@@ -130,7 +134,6 @@ public class EditAdController {
             jsonRequest.addProperty("imageUrl", uploadedImageUrl);
 
             HttpResponse<String> response = ApiClient.put("/api/ads/update/" + currentAdId, jsonRequest.toString());
-
             if (response.statusCode() == 200 || response.statusCode() == 201) {
                 messageLabel.setStyle("-fx-text-fill: green;");
                 messageLabel.setText("آگهی با موفقیت ویرایش شد.");
@@ -151,13 +154,12 @@ public class EditAdController {
             Scene scene = new Scene(fxmlLoader.load());
             AdDetailsController controller = fxmlLoader.getController();
             controller.initData(currentAdId);
-
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
             stage.setTitle("جزئیات آگهی");
         } catch (Exception e) {
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("خطا در بازگشت به صفحه قبل.");
+            messageLabel.setText("خطا در بازگشت.");
         }
     }
 }

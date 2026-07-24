@@ -59,7 +59,7 @@ public class BookmarksController {
                     }
                 }
             } else {
-                messageLabel.setText("خطا در دریافت لیست علاقه‌مندی‌ها.");
+                messageLabel.setText("خطا در دریافت نشان‌شده‌ها.");
                 messageLabel.setTextFill(Color.RED);
             }
         } catch (Exception e) {
@@ -74,6 +74,20 @@ public class BookmarksController {
         card.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
         card.setPrefWidth(220);
 
+        javafx.scene.image.ImageView imageView = new javafx.scene.image.ImageView();
+        imageView.setFitWidth(190);
+        imageView.setFitHeight(130);
+        imageView.setPreserveRatio(true);
+
+        if (ad.has("imageUrl") && !ad.get("imageUrl").isJsonNull() && !ad.get("imageUrl").getAsString().trim().isEmpty()) {
+            String[] urls = ad.get("imageUrl").getAsString().split(",");
+            String imageVal = urls[0];
+            String finalUrl = imageVal.startsWith("http") ? imageVal : "http://localhost:8080/uploads/" + imageVal;
+            imageView.setImage(new javafx.scene.image.Image(finalUrl, true));
+        } else {
+            imageView.setImage(new javafx.scene.image.Image("https://placehold.co/200x150/e0e0e0/808080?text=No+Image", true));
+        }
+
         String title = ad.has("title") && !ad.get("title").isJsonNull() ? ad.get("title").getAsString() : "بدون عنوان";
         Label titleLabel = new Label(title);
         titleLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
@@ -84,15 +98,13 @@ public class BookmarksController {
         priceLabel.setTextFill(Color.web("#27ae60"));
         priceLabel.setFont(Font.font("System", FontWeight.BOLD, 12));
 
-        Button removeBtn = new Button("حذف از علاقه‌مندی‌ها");
+        Button removeBtn = new Button("حذف از نشان‌شده‌ها");
         removeBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
         removeBtn.setMaxWidth(Double.MAX_VALUE);
-
         Long adId = ad.has("id") && !ad.get("id").isJsonNull() ? ad.get("id").getAsLong() : -1L;
-
         removeBtn.setOnAction(e -> removeBookmark(adId));
 
-        card.getChildren().addAll(titleLabel, priceLabel, removeBtn);
+        card.getChildren().addAll(imageView, titleLabel, priceLabel, removeBtn);
         return card;
     }
 
@@ -103,11 +115,11 @@ public class BookmarksController {
             if (response.statusCode() == 200) {
                 loadBookmarks();
             } else {
-                messageLabel.setText("خطا در حذف آگهی از علاقه‌مندی‌ها.");
+                messageLabel.setText("خطا در حذف نشان.");
                 messageLabel.setTextFill(Color.RED);
             }
         } catch (Exception e) {
-            messageLabel.setText("خطای ارتباط با سرور.");
+            messageLabel.setText("خطا در ارتباط با سرور.");
             messageLabel.setTextFill(Color.RED);
         }
     }
@@ -119,7 +131,7 @@ public class BookmarksController {
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
-            stage.setTitle("سامانه ثبت آگهی دست دوم - داشبورد");
+            stage.setTitle("داشبورد");
         } catch (Exception e) {
             messageLabel.setText("خطا در بازگشت به داشبورد.");
             messageLabel.setTextFill(Color.RED);

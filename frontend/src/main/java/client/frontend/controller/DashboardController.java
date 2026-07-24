@@ -7,7 +7,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +21,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.net.URLEncoder;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +43,7 @@ public class DashboardController {
     public void initialize() {
         String username = SessionManager.getInstance().getUsername();
         String role = SessionManager.getInstance().getRole();
+
         welcomeLabel.setText("خوش آمدید، " + username);
 
         if ("ADMIN".equals(role)) {
@@ -60,78 +61,72 @@ public class DashboardController {
         errorLabel.setText("");
         adsContainer.getChildren().clear();
 
-        StringBuilder query = new StringBuilder("/api/ads/search?");
-        List<String> params = new ArrayList<>();
+        try {
+            StringBuilder query = new StringBuilder("/api/ads/search?");
+            List<String> params = new ArrayList<>();
 
-        if (searchField.getText() != null && !searchField.getText().trim().isEmpty()) {
-            params.add("keyword=" + URLEncoder.encode(searchField.getText().trim(), StandardCharsets.UTF_8));
-        }
-        if (categoryField.getText() != null && !categoryField.getText().trim().isEmpty()) {
-            params.add("category=" + URLEncoder.encode(categoryField.getText().trim(), StandardCharsets.UTF_8));
-        }
-        if (cityField.getText() != null && !cityField.getText().trim().isEmpty()) {
-            params.add("city=" + URLEncoder.encode(cityField.getText().trim(), StandardCharsets.UTF_8));
-        }
-        if (minPriceField.getText() != null && !minPriceField.getText().trim().isEmpty()) {
-            try {
-                Double.parseDouble(minPriceField.getText().trim());
-                params.add("minPrice=" + minPriceField.getText().trim());
-            } catch (NumberFormatException e) {
-                errorLabel.setText("مبلغ نامعتبر است.");
-                return;
+            if (searchField.getText() != null && !searchField.getText().trim().isEmpty()) {
+                params.add("keyword=" + URLEncoder.encode(searchField.getText().trim(), StandardCharsets.UTF_8));
             }
-        }
-        if (maxPriceField.getText() != null && !maxPriceField.getText().trim().isEmpty()) {
-            try {
-                Double.parseDouble(maxPriceField.getText().trim());
-                params.add("maxPrice=" + maxPriceField.getText().trim());
-            } catch (NumberFormatException e) {
-                errorLabel.setText("مبلغ نامعتبر است.");
-                return;
+            if (categoryField.getText() != null && !categoryField.getText().trim().isEmpty()) {
+                params.add("category=" + URLEncoder.encode(categoryField.getText().trim(), StandardCharsets.UTF_8));
             }
-        }
-
-        String sortValue = sortComboBox.getValue();
-        if ("ارزان‌ترین".equals(sortValue)) {
-            params.add("sortBy=cheapest");
-        } else if ("گران‌ترین".equals(sortValue)) {
-            params.add("sortBy=expensive");
-        } else {
-            params.add("sortBy=newest");
-        }
-
-        query.append(String.join("&", params));
-
-        ApiClient.get(query.toString()).thenAccept(response -> {
-            Platform.runLater(() -> {
+            if (cityField.getText() != null && !cityField.getText().trim().isEmpty()) {
+                params.add("city=" + URLEncoder.encode(cityField.getText().trim(), StandardCharsets.UTF_8));
+            }
+            if (minPriceField.getText() != null && !minPriceField.getText().trim().isEmpty()) {
                 try {
-                    if (response.statusCode() == 200 && response.body() != null) {
-                        JsonArray adsArray = JsonParser.parseString(response.body()).getAsJsonArray();
-                        for (JsonElement element : adsArray) {
-                            JsonObject ad = element.getAsJsonObject();
-                            VBox adCard = createAdCard(ad);
-                            adsContainer.getChildren().add(adCard);
-                        }
-                        if (adsArray.isEmpty()) {
-                            errorLabel.setText("آگهی یافت نشد.");
-                            errorLabel.setTextFill(Color.GRAY);
-                        }
-                    } else {
-                        errorLabel.setText("خطا در دریافت آگهی‌ها.");
-                        errorLabel.setTextFill(Color.RED);
-                    }
-                } catch (Exception e) {
-                    errorLabel.setText("خطا در پردازش اطلاعات.");
-                    errorLabel.setTextFill(Color.RED);
+                    Double.parseDouble(minPriceField.getText().trim());
+                    params.add("minPrice=" + minPriceField.getText().trim());
+                } catch (NumberFormatException e) {
+                    errorLabel.setText("قیمت باید عدد باشد.");
+                    return;
                 }
-            });
-        }).exceptionally(ex -> {
-            Platform.runLater(() -> {
-                errorLabel.setText("خطا در ارتباط با سرور.");
+            }
+            if (maxPriceField.getText() != null && !maxPriceField.getText().trim().isEmpty()) {
+                try {
+                    Double.parseDouble(maxPriceField.getText().trim());
+                    params.add("maxPrice=" + maxPriceField.getText().trim());
+                } catch (NumberFormatException e) {
+                    errorLabel.setText("قیمت باید عدد باشد.");
+                    return;
+                }
+            }
+
+            String sortValue = sortComboBox.getValue();
+            if ("ارزان‌ترین".equals(sortValue)) {
+                params.add("sortBy=cheapest");
+            } else if ("گران‌ترین".equals(sortValue)) {
+                params.add("sortBy=expensive");
+            } else {
+                params.add("sortBy=newest");
+            }
+
+            query.append(String.join("&", params));
+
+            HttpResponse<String> response = ApiClient.get(query.toString());
+
+            if (response.statusCode() == 200 && response.body() != null) {
+                JsonArray adsArray = JsonParser.parseString(response.body()).getAsJsonArray();
+
+                for (JsonElement element : adsArray) {
+                    JsonObject ad = element.getAsJsonObject();
+                    VBox adCard = createAdCard(ad);
+                    adsContainer.getChildren().add(adCard);
+                }
+
+                if (adsArray.isEmpty()) {
+                    errorLabel.setText("هیچ آگهی یافت نشد.");
+                    errorLabel.setTextFill(Color.GRAY);
+                }
+            } else {
+                errorLabel.setText("خطا در دریافت آگهی‌ها.");
                 errorLabel.setTextFill(Color.RED);
-            });
-            return null;
-        });
+            }
+        } catch (Exception e) {
+            errorLabel.setText("خطا در ارتباط با سرور.");
+            errorLabel.setTextFill(Color.RED);
+        }
     }
 
     private VBox createAdCard(JsonObject ad) {
@@ -169,13 +164,15 @@ public class DashboardController {
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("AdDetails.fxml"));
                     Scene scene = new Scene(fxmlLoader.load());
+
                     AdDetailsController controller = fxmlLoader.getController();
                     controller.initData(adId);
+
                     Stage stage = (Stage) card.getScene().getWindow();
                     stage.setScene(scene);
                     stage.setTitle("جزئیات آگهی");
                 } catch (Exception e) {
-                    errorLabel.setText("خطا در باز کردن آگهی.");
+                    errorLabel.setText("خطا در باز کردن جزئیات آگهی.");
                     errorLabel.setTextFill(Color.RED);
                 }
             }
@@ -190,21 +187,14 @@ public class DashboardController {
         imageView.setPreserveRatio(true);
 
         if (ad.has("imageUrl") && !ad.get("imageUrl").isJsonNull() && !ad.get("imageUrl").getAsString().trim().isEmpty()) {
-            String imageVal = ad.get("imageUrl").getAsString();
+            String[] urls = ad.get("imageUrl").getAsString().split(",");
+            String imageVal = urls[0];
             String finalUrl = imageVal.startsWith("http") ? imageVal : "http://localhost:8080/uploads/" + imageVal;
             javafx.scene.image.Image image = new javafx.scene.image.Image(finalUrl, true);
             imageView.setImage(image);
         } else {
-            try {
-                java.net.URL defaultImgUrl = MainApplication.class.getResource("no-image.png");
-                if (defaultImgUrl != null) {
-                    imageView.setImage(new javafx.scene.image.Image(defaultImgUrl.toExternalForm()));
-                } else {
-                    imageView.setImage(new javafx.scene.image.Image("https://via.placeholder.com/200x150?text=No+Image"));
-                }
-            } catch (Exception ignored) {
-                imageView.setImage(new javafx.scene.image.Image("https://via.placeholder.com/200x150?text=No+Image"));
-            }
+            javafx.scene.image.Image defaultImage = new javafx.scene.image.Image("https://placehold.co/200x150/e0e0e0/808080?text=No+Image", true);
+            imageView.setImage(defaultImage);
         }
 
         card.getChildren().add(0, imageView);
@@ -212,7 +202,6 @@ public class DashboardController {
     }
 
     @FXML protected void onSearchClick(ActionEvent event) { loadAds(); }
-
     @FXML protected void onProfileClick(ActionEvent event) { navigateTo(event, "Profile.fxml", "پروفایل"); }
 
     @FXML protected void onClearFiltersClick(ActionEvent event) {
@@ -226,13 +215,9 @@ public class DashboardController {
     }
 
     @FXML protected void onCreateAdClick(ActionEvent event) { navigateTo(event, "CreateAd.fxml", "ثبت آگهی"); }
-
     @FXML protected void onMessagesClick(ActionEvent event) { navigateTo(event, "Chat.fxml", "پیام‌ها"); }
-
     @FXML protected void onBookmarksClick(ActionEvent event) { navigateTo(event, "Bookmarks.fxml", "علاقه‌مندی‌ها"); }
-
     @FXML protected void onMyAdsClick(ActionEvent event) { navigateTo(event, "MyAds.fxml", "آگهی‌های من"); }
-
     @FXML protected void onAdminPanelClick(ActionEvent event) { navigateTo(event, "AdminPanel.fxml", "پنل مدیریت"); }
 
     @FXML protected void onLogoutClick(ActionEvent event) {

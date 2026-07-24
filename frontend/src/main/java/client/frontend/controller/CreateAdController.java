@@ -12,42 +12,40 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.net.http.HttpResponse;
-import javafx.stage.FileChooser;
 import java.io.File;
-public class CreateAdController {
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 
+public class CreateAdController {
     @FXML private TextField titleField;
     @FXML private TextField categoryField;
     @FXML private TextField cityField;
     @FXML private TextField priceField;
     @FXML private TextArea descriptionField;
     @FXML private Label messageLabel;
-
     @FXML private Label imageNameLabel;
-    private File selectedImageFile = null;
+
+    private List<File> selectedImageFiles = new ArrayList<>();
 
     @FXML
     protected void onSelectImageClick(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("انتخاب عکس آگهی");
-
+        fileChooser.setTitle("انتخاب عکس‌ها");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
         );
-
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        File file = fileChooser.showOpenDialog(stage);
-
-        if (file != null) {
-            selectedImageFile = file;
-            imageNameLabel.setText(file.getName());
+        List<File> files = fileChooser.showOpenMultipleDialog(stage);
+        if (files != null && !files.isEmpty()) {
+            selectedImageFiles = files;
+            imageNameLabel.setText(files.size() + " عکس انتخاب شد");
             imageNameLabel.setStyle("-fx-text-fill: black;");
         }
     }
-
 
     @FXML
     protected void onBackClick(ActionEvent event) {
@@ -56,12 +54,13 @@ public class CreateAdController {
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
-            stage.setTitle("سامانه ثبت آگهی دست دوم - داشبورد");
+            stage.setTitle("داشبورد");
         } catch (Exception e) {
             messageLabel.setStyle("-fx-text-fill: red;");
             messageLabel.setText("خطا در بازگشت به داشبورد.");
         }
     }
+
     @FXML
     protected void onSubmitClick(ActionEvent event) {
         String title = titleField.getText();
@@ -75,42 +74,38 @@ public class CreateAdController {
                 city == null || city.trim().isEmpty() ||
                 priceStr == null || priceStr.trim().isEmpty()) {
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("لطفاً تمامی فیلدهای ستاره‌دار را پر کنید.");
+            messageLabel.setText("لطفاً فیلدهای ستاره‌دار را پر کنید.");
             return;
         }
 
         double price;
         try {
             price = Double.parseDouble(priceStr.trim());
-            if (price < 0) {
-                throw new NumberFormatException();
-            }
+            if (price < 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("مبلغ باید به صورت عددی و مثبت باشد.");
+            messageLabel.setText("قیمت نامعتبر است.");
             return;
         }
 
         try {
-            String uploadedImageUrl = "";
-
-            if (selectedImageFile != null) {
-                HttpResponse<String> uploadResponse = ApiClient.uploadFile("/api/files/upload", selectedImageFile);
-
-                if (uploadResponse.statusCode() == 200 || uploadResponse.statusCode() == 201) {
-                    String body = uploadResponse.body();
-                    if (body.trim().startsWith("{")) {
-                        JsonObject resObj = JsonParser.parseString(body).getAsJsonObject();
-                        uploadedImageUrl = resObj.has("fileName") ? resObj.get("fileName").getAsString() : body;
-                    } else {
-                        uploadedImageUrl = body.trim();
+            List<String> uploadedUrls = new ArrayList<>();
+            if (!selectedImageFiles.isEmpty()) {
+                for (File file : selectedImageFiles) {
+                    HttpResponse<String> uploadResponse = ApiClient.uploadFile("/api/files/upload", file);
+                    if (uploadResponse.statusCode() == 200 || uploadResponse.statusCode() == 201) {
+                        String body = uploadResponse.body();
+                        if (body.trim().startsWith("{")) {
+                            JsonObject resObj = JsonParser.parseString(body).getAsJsonObject();
+                            uploadedUrls.add(resObj.has("fileName") ? resObj.get("fileName").getAsString() : body);
+                        } else {
+                            uploadedUrls.add(body.trim());
+                        }
                     }
-                } else {
-                    messageLabel.setStyle("-fx-text-fill: red;");
-                    messageLabel.setText("خطا در آپلود عکس. لطفاً بررسی کنید سرور روشن است.");
-                    return;
                 }
             }
+
+            String finalImageUrl = String.join(",", uploadedUrls);
 
             JsonObject jsonRequest = new JsonObject();
             jsonRequest.addProperty("title", title.trim());
@@ -118,20 +113,19 @@ public class CreateAdController {
             jsonRequest.addProperty("price", price);
             jsonRequest.addProperty("category", category.trim());
             jsonRequest.addProperty("city", city.trim());
-            jsonRequest.addProperty("imageUrl", uploadedImageUrl); // ارسال نام عکس برای دیتابیس
+            jsonRequest.addProperty("imageUrl", finalImageUrl);
 
             HttpResponse<String> response = ApiClient.post("/api/ads/create", jsonRequest.toString());
-
             if (response.statusCode() == 201 || response.statusCode() == 200) {
                 messageLabel.setStyle("-fx-text-fill: green;");
-                messageLabel.setText("آگهی با موفقیت ثبت شد و در انتظار تایید مدیر است.");
+                messageLabel.setText("آگهی با موفقیت ثبت شد.");
                 titleField.clear();
                 categoryField.clear();
                 cityField.clear();
                 priceField.clear();
                 descriptionField.clear();
-                imageNameLabel.setText("عکسی انتخاب نشده است");
-                selectedImageFile = null;
+                imageNameLabel.setText("عکسی انتخاب نشده");
+                selectedImageFiles.clear();
             } else {
                 messageLabel.setStyle("-fx-text-fill: red;");
                 messageLabel.setText("خطا در ثبت آگهی.");
